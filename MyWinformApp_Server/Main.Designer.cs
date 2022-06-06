@@ -47,6 +47,7 @@ namespace MyWinformApp_Server
             this.Button_Start.TabIndex = 0;
             this.Button_Start.Text = "Start";
             this.Button_Start.UseVisualStyleBackColor = true;
+            this.Button_Start.Click += new System.EventHandler(this.Button_Start_Click);
             // 
             // Button_Stop
             // 
@@ -56,6 +57,7 @@ namespace MyWinformApp_Server
             this.Button_Stop.TabIndex = 1;
             this.Button_Stop.Text = "Stop";
             this.Button_Stop.UseVisualStyleBackColor = true;
+            this.Button_Stop.Click += new System.EventHandler(this.Button_Stop_Click);
             // 
             // richTextBox1
             // 

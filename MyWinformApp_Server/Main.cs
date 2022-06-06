@@ -18,10 +18,9 @@ namespace MyWinformApp_Server
         string message = string.Empty;
 
         const int portNumber = 9000;
-        static string ipNumber = "127.0.0.1";
         
         static int userCount = 12;
-        string data;
+        string date;
 
         public Dictionary<TcpClient, string> clientList = new Dictionary<TcpClient, string>();
 
@@ -31,63 +30,107 @@ namespace MyWinformApp_Server
         public Main()
         {
             InitializeComponent();
-            //Thread thread = new Thread();
-            ThreadPool.QueueUserWorkItem(InitSocket);
-            
+            Thread thread = new Thread(InitSocket);
+            thread.IsBackground = true;
+            thread.Start();
         }
-
 
         private void Main_Load(object sender, EventArgs e)
         {
-
+            
         }
 
-        private void InitSocket(object state)
+        private void InitSocket()
         {
             server = new TcpListener(IPAddress.Any, 8000);
             clientSocket = default(TcpClient);
             server.Start();
-            // DisplayText();
+            displayText(" >> Server Started.");
 
             while (true)
             {
-                userCount++;
-                clientSocket = server.AcceptTcpClient();
-                // DIsplayText( Accept connection );
+                try
+                {
+                    userCount++;
+                    clientSocket = server.AcceptTcpClient();
+                    displayText("Connection Accepted");
 
-                NetworkStream stream = clientSocket.GetStream();
-                byte[] buffer = new byte[1024];
-                int bytes = stream.Read(buffer, 0, buffer.Length);
-                string user_name = Encoding.Unicode.GetString(buffer, 0, bytes);
-                user_name = user_name.Substring(0, user_name.IndexOf("$"));
+                    NetworkStream stream = clientSocket.GetStream();
+                    byte[] buffer = new byte[1024];
+                    int bytes = stream.Read(buffer, 0, buffer.Length);
+                    string user_name = Encoding.Unicode.GetString(buffer, 0, bytes);
+                    user_name = user_name.Substring(0, user_name.IndexOf("$"));
 
-                clientList.Add(clientSocket, user_name);
+                    clientList.Add(clientSocket, user_name);
 
-                // send msg to all
+                    sendMessagetoAll(user_name + " has entered the chat.", "", false);
 
-                handleClient h_client = new handleClient();
-                
-                
+                    handleClient h_client = new handleClient();
+                    h_client.OnReceived += new handleClient.MessageDisplayHandler(onReceived);
+                    h_client.OnDisconnected += new handleClient.DisconnectedHandler(OnDisconnected);
+                }
+                catch (SocketException es)
+                {
+                    break;
+                }
+                catch (Exception ex)
+                {
+                    break;
+                }
+
+                clientSocket.Close();
+                server.Stop();
             }
         }
 
+        private void OnDisconnected(TcpClient clientSocket)
+        {
+            if (clientList.ContainsKey(clientSocket))
+                clientList.Remove(clientSocket);
+        }
 
         private void onReceived(string message, string user_name)
         {
             if(message.Equals("/exit"))
             {
                 string DisplayMessage = user_name + " leaves the chat.";
-                DisplayText(DisplayMessage);
+                displayText(DisplayMessage);
 
             }else
             {
                 string DisplayMessage = user_name + " leaves the chat.";
-                DisplayText(DisplayMessage);
+                displayText(DisplayMessage);
 
             }    
         }
 
-        private void DisplayText(string text)
+        private void sendMessagetoAll(string message, string user_name, bool flag)
+        {
+            foreach(var pair in clientList)
+            {
+                date = DateTime.Now.ToString("yyyy.MM.dd. HH.mm.ss");
+
+                TcpClient client = pair.Key as TcpClient;
+                NetworkStream stream = client.GetStream();
+                byte[] buffer = null;
+
+                if (flag)
+                {
+                    if (message.Equals("/exit "))
+                    {
+                        buffer = Encoding.Unicode.GetBytes(user_name + " leaves the chat.");
+                    }
+                    else
+                    {
+                        buffer = Encoding.Unicode.GetBytes("[" + date + "]" + user_name + " : " + message);
+                    }
+                }
+                stream.Write(buffer, 0, buffer.Length);
+                stream.Flush();
+            }
+        }
+
+        private void displayText(string text)
         {
             if (richTextBox1.InvokeRequired)
             {
@@ -99,6 +142,16 @@ namespace MyWinformApp_Server
             {
                 richTextBox1.AppendText(text + Environment.NewLine);
             }
+        }
+
+        private void Button_Start_Click(object sender, EventArgs e)
+        {
+            
+        }
+
+        private void Button_Stop_Click(object sender, EventArgs e)
+        {
+            
         }
     }
 }
