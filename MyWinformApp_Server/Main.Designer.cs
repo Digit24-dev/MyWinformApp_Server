@@ -37,6 +37,7 @@ namespace MyWinformApp_Server
             this.label1 = new System.Windows.Forms.Label();
             this.ListBox_Users = new System.Windows.Forms.ListBox();
             this.label2 = new System.Windows.Forms.Label();
+            this.Button_Exit = new System.Windows.Forms.Button();
             this.SuspendLayout();
             // 
             // Button_Start
@@ -72,9 +73,9 @@ namespace MyWinformApp_Server
             // 
             this.TextBox_Status.Location = new System.Drawing.Point(12, 21);
             this.TextBox_Status.Name = "TextBox_Status";
-            this.TextBox_Status.ReadOnly = true;
             this.TextBox_Status.Size = new System.Drawing.Size(156, 21);
             this.TextBox_Status.TabIndex = 3;
+            this.TextBox_Status.KeyUp += new System.Windows.Forms.KeyEventHandler(this.TextBox_Status_KeyUp);
             // 
             // vScrollBar1
             // 
@@ -110,11 +111,22 @@ namespace MyWinformApp_Server
             this.label2.TabIndex = 7;
             this.label2.Text = "Users";
             // 
+            // Button_Exit
+            // 
+            this.Button_Exit.Location = new System.Drawing.Point(174, 48);
+            this.Button_Exit.Name = "Button_Exit";
+            this.Button_Exit.Size = new System.Drawing.Size(75, 24);
+            this.Button_Exit.TabIndex = 8;
+            this.Button_Exit.Text = "Exit";
+            this.Button_Exit.UseVisualStyleBackColor = true;
+            this.Button_Exit.Click += new System.EventHandler(this.Button_Exit_Click);
+            // 
             // Main
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 12F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(636, 450);
+            this.Controls.Add(this.Button_Exit);
             this.Controls.Add(this.label2);
             this.Controls.Add(this.ListBox_Users);
             this.Controls.Add(this.label1);
@@ -142,6 +154,7 @@ namespace MyWinformApp_Server
         private System.Windows.Forms.Label label1;
         private System.Windows.Forms.ListBox ListBox_Users;
         private System.Windows.Forms.Label label2;
+        private System.Windows.Forms.Button Button_Exit;
     }
 }
 

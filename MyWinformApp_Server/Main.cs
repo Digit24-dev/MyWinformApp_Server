@@ -63,7 +63,7 @@ namespace MyWinformApp_Server
 
                     clientList.Add(clientSocket, user_name);
 
-                    sendMessagetoAll(user_name + " has entered the chat.", "", false);
+                    sendMessagetoAll(user_name + " has entered the chat.", "", true);
 
                     handleClient h_client = new handleClient();
                     h_client.OnReceived += new handleClient.MessageDisplayHandler(onReceived);
@@ -95,13 +95,13 @@ namespace MyWinformApp_Server
             {
                 string DisplayMessage = user_name + " leaves the chat.";
                 displayText(DisplayMessage);
-
+                sendMessagetoAll(DisplayMessage, user_name, true);
             }else
             {
-                string DisplayMessage = user_name + " leaves the chat.";
+                string DisplayMessage = "[From client]" + user_name + " : " + message;
                 displayText(DisplayMessage);
-
-            }    
+                sendMessagetoAll(message, user_name, true);
+            }
         }
 
         private void sendMessagetoAll(string message, string user_name, bool flag)
@@ -152,6 +152,18 @@ namespace MyWinformApp_Server
         private void Button_Stop_Click(object sender, EventArgs e)
         {
             
+        }
+
+        private void Button_Exit_Click(object sender, EventArgs e)
+        {
+            clientSocket.Close();
+            server.Stop();
+            this.Close();
+        }
+
+        private void TextBox_Status_KeyUp(object sender, KeyEventArgs e)
+        {
+            sendMessagetoAll("ping", "", true);
         }
     }
 }
