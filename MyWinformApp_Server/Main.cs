@@ -19,7 +19,7 @@ namespace MyWinformApp_Server
 
         const int portNumber = 9000;
         
-        static int userCount = 12;
+        static int userCount = 0;
         string date;
 
         public Dictionary<TcpClient, string> clientList = new Dictionary<TcpClient, string>();
@@ -46,14 +46,14 @@ namespace MyWinformApp_Server
             clientSocket = default(TcpClient);
             server.Start();
             displayText(" >> Server Started.");
-
+            
             while (true)
             {
                 try
                 {
                     userCount++;
                     clientSocket = server.AcceptTcpClient();
-                    displayText("Connection Accepted");
+                    displayText(">> Connection Accepted");
 
                     NetworkStream stream = clientSocket.GetStream();
                     byte[] buffer = new byte[1024];
@@ -68,13 +68,17 @@ namespace MyWinformApp_Server
                     handleClient h_client = new handleClient();
                     h_client.OnReceived += new handleClient.MessageDisplayHandler(onReceived);
                     h_client.OnDisconnected += new handleClient.DisconnectedHandler(OnDisconnected);
+
+                    sendMessagetoAll("running?", "", true);
                 }
                 catch (SocketException es)
                 {
+                    MessageBox.Show("es!");
                     break;
                 }
                 catch (Exception ex)
                 {
+                    MessageBox.Show("ex!");
                     break;
                 }
 
@@ -95,7 +99,7 @@ namespace MyWinformApp_Server
             {
                 string DisplayMessage = user_name + " leaves the chat.";
                 displayText(DisplayMessage);
-                sendMessagetoAll(DisplayMessage, user_name, true);
+                sendMessagetoAll("/exit", user_name, true);
             }else
             {
                 string DisplayMessage = "[From client]" + user_name + " : " + message;
@@ -116,7 +120,7 @@ namespace MyWinformApp_Server
 
                 if (flag)
                 {
-                    if (message.Equals("/exit "))
+                    if (message.Equals("/exit"))
                     {
                         buffer = Encoding.Unicode.GetBytes(user_name + " leaves the chat.");
                     }
@@ -156,7 +160,6 @@ namespace MyWinformApp_Server
 
         private void Button_Exit_Click(object sender, EventArgs e)
         {
-            clientSocket.Close();
             server.Stop();
             this.Close();
         }
