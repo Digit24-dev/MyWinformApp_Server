@@ -45,6 +45,7 @@ namespace MyWinformApp_Server
             server = new TcpListener(IPAddress.Any, 8000);
             clientSocket = default(TcpClient);
             server.Start();
+            
             displayText(" >> Server Started.");
             
             while (true)
@@ -60,16 +61,15 @@ namespace MyWinformApp_Server
                     int bytes = stream.Read(buffer, 0, buffer.Length);
                     string user_name = Encoding.Unicode.GetString(buffer, 0, bytes);
                     user_name = user_name.Substring(0, user_name.IndexOf("$"));
-
                     clientList.Add(clientSocket, user_name);
 
-                    sendMessagetoAll(user_name + " has entered the chat.", "", true);
+                    sendMessagetoAll(user_name + " has entered the chat.", "", false);
 
                     handleClient h_client = new handleClient();
                     h_client.OnReceived += new handleClient.MessageDisplayHandler(onReceived);
                     h_client.OnDisconnected += new handleClient.DisconnectedHandler(OnDisconnected);
-
-                    sendMessagetoAll("running?", "", true);
+                    h_client.startClient(clientSocket, clientList);
+                    // sendMessagetoAll("running?", "", true);
                 }
                 catch (SocketException es)
                 {
@@ -78,13 +78,13 @@ namespace MyWinformApp_Server
                 }
                 catch (Exception ex)
                 {
+                    displayText(ex.Message);
                     MessageBox.Show("ex!");
                     break;
                 }
-
-                clientSocket.Close();
-                server.Stop();
             }
+            clientSocket.Close();
+            server.Stop();
         }
 
         private void OnDisconnected(TcpClient clientSocket)
@@ -99,7 +99,7 @@ namespace MyWinformApp_Server
             {
                 string DisplayMessage = user_name + " leaves the chat.";
                 displayText(DisplayMessage);
-                sendMessagetoAll("/exit", user_name, true);
+                sendMessagetoAll(DisplayMessage, user_name, true);
             }else
             {
                 string DisplayMessage = "[From client]" + user_name + " : " + message;
@@ -129,12 +129,17 @@ namespace MyWinformApp_Server
                         buffer = Encoding.Unicode.GetBytes("[" + date + "]" + user_name + " : " + message);
                     }
                 }
+                else
+                {
+                    buffer = Encoding.Unicode.GetBytes(message);
+                }
+
                 stream.Write(buffer, 0, buffer.Length);
                 stream.Flush();
             }
         }
 
-        private void displayText(string text)
+        public void displayText(string text)
         {
             if (richTextBox1.InvokeRequired)
             {
