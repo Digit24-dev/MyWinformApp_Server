@@ -14,7 +14,6 @@ namespace MyWinformApp_Server
     {
         TcpClient clientSocket = null;
         public Dictionary<TcpClient, string> clientList = null;
-        object objectFrom = null;
 
         public void startClient(TcpClient clientSocket, Dictionary<TcpClient, string> clientList)
         {
