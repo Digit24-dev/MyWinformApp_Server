@@ -62,6 +62,7 @@ namespace MyWinformApp_Server
                     string user_name = Encoding.Unicode.GetString(buffer, 0, bytes);
                     user_name = user_name.Substring(0, user_name.IndexOf("$"));
                     clientList.Add(clientSocket, user_name);
+                    ListBox_Users.Items.Add(user_name);
 
                     sendMessagetoAll(user_name + " has entered the chat.", "", false);
 
@@ -98,6 +99,7 @@ namespace MyWinformApp_Server
             if(message.Equals("/exit"))
             {
                 string DisplayMessage = user_name + " leaves the chat.";
+                ListBox_Users.Items.Remove(user_name);
                 displayText(DisplayMessage);
                 sendMessagetoAll(DisplayMessage, user_name, true);
             }else

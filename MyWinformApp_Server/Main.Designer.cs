@@ -135,7 +135,8 @@ namespace MyWinformApp_Server
             this.Controls.Add(this.richTextBox1);
             this.Controls.Add(this.Button_Stop);
             this.Controls.Add(this.Button_Start);
-            this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.None;
+            this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
+            this.ImeMode = System.Windows.Forms.ImeMode.NoControl;
             this.Name = "Main";
             this.Text = "Form1";
             this.Load += new System.EventHandler(this.Main_Load);
