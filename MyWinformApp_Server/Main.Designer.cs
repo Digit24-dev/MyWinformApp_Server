@@ -33,7 +33,6 @@ namespace MyWinformApp_Server
             this.Button_Stop = new System.Windows.Forms.Button();
             this.richTextBox1 = new System.Windows.Forms.RichTextBox();
             this.TextBox_Status = new System.Windows.Forms.TextBox();
-            this.vScrollBar1 = new System.Windows.Forms.VScrollBar();
             this.label1 = new System.Windows.Forms.Label();
             this.ListBox_Users = new System.Windows.Forms.ListBox();
             this.label2 = new System.Windows.Forms.Label();
@@ -76,13 +75,6 @@ namespace MyWinformApp_Server
             this.TextBox_Status.Size = new System.Drawing.Size(156, 21);
             this.TextBox_Status.TabIndex = 3;
             this.TextBox_Status.KeyUp += new System.Windows.Forms.KeyEventHandler(this.TextBox_Status_KeyUp);
-            // 
-            // vScrollBar1
-            // 
-            this.vScrollBar1.Location = new System.Drawing.Point(445, 114);
-            this.vScrollBar1.Name = "vScrollBar1";
-            this.vScrollBar1.Size = new System.Drawing.Size(18, 324);
-            this.vScrollBar1.TabIndex = 4;
             // 
             // label1
             // 
@@ -130,7 +122,6 @@ namespace MyWinformApp_Server
             this.Controls.Add(this.label2);
             this.Controls.Add(this.ListBox_Users);
             this.Controls.Add(this.label1);
-            this.Controls.Add(this.vScrollBar1);
             this.Controls.Add(this.TextBox_Status);
             this.Controls.Add(this.richTextBox1);
             this.Controls.Add(this.Button_Stop);
@@ -151,7 +142,6 @@ namespace MyWinformApp_Server
         private System.Windows.Forms.Button Button_Stop;
         private System.Windows.Forms.RichTextBox richTextBox1;
         private System.Windows.Forms.TextBox TextBox_Status;
-        private System.Windows.Forms.VScrollBar vScrollBar1;
         private System.Windows.Forms.Label label1;
         private System.Windows.Forms.ListBox ListBox_Users;
         private System.Windows.Forms.Label label2;
