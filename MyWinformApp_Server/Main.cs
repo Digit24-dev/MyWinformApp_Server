@@ -71,13 +71,13 @@ namespace MyWinformApp_Server
                         }));
                     }
 
-                    sendMessagetoAll(user_name + " has entered the chat.", "", false);
+                    sendMessagetoAll(user_name);
 
                     handleClient h_client = new handleClient();
                     h_client.OnReceived += new handleClient.MessageDisplayHandler(onReceived);
                     h_client.OnDisconnected += new handleClient.DisconnectedHandler(OnDisconnected);
                     h_client.startClient(clientSocket, clientList);
-                    // sendMessagetoAll("running?", "", true);
+
                 }
                 catch (SocketException es)
                 {
@@ -148,6 +148,24 @@ namespace MyWinformApp_Server
                 {
                     buffer = Encoding.Unicode.GetBytes(message);
                 }
+
+                stream.Write(buffer, 0, buffer.Length);
+                stream.Flush();
+            }
+        }
+
+        // Method Override - new member
+        private void sendMessagetoAll(string user_name)
+        {
+            foreach (var pair in clientList)
+            {
+                date = DateTime.Now.ToString("yyyy.MM.dd. HH.mm.ss");
+
+                TcpClient client = pair.Key as TcpClient;
+                NetworkStream stream = client.GetStream();
+                byte[] buffer = null;
+
+                buffer = Encoding.Unicode.GetBytes(user_name + "$");
 
                 stream.Write(buffer, 0, buffer.Length);
                 stream.Flush();
