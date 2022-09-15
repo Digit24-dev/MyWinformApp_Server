@@ -172,6 +172,11 @@ namespace MyWinformApp_Server
             }
         }
 
+        private void sendUserList()
+        {
+
+        }
+
         public void displayText(string text)
         {
             if (richTextBox1.InvokeRequired)
