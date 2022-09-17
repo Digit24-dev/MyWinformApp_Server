@@ -154,18 +154,23 @@ namespace MyWinformApp_Server
             }
         }
 
-        // Method Override - new member
+        // Method Overload - new member
         private void sendMessagetoAll(string user_name)
         {
+            string userList = "";
+
+            foreach (var pair in clientList)
+            {
+                userList += pair.Value + "$";
+            }
             foreach (var pair in clientList)
             {
                 date = DateTime.Now.ToString("yyyy.MM.dd. HH.mm.ss");
 
                 TcpClient client = pair.Key as TcpClient;
                 NetworkStream stream = client.GetStream();
-                byte[] buffer = null;
 
-                buffer = Encoding.Unicode.GetBytes(user_name + "$");
+                byte[] buffer = Encoding.Unicode.GetBytes(userList);
 
                 stream.Write(buffer, 0, buffer.Length);
                 stream.Flush();
