@@ -71,7 +71,7 @@ namespace MyWinformApp_Server
                         }));
                     }
 
-                    sendMessagetoAll(user_name);
+                    sendListOfUsers(user_name);
 
                     handleClient h_client = new handleClient();
                     h_client.OnReceived += new handleClient.MessageDisplayHandler(onReceived);
@@ -155,7 +155,7 @@ namespace MyWinformApp_Server
         }
 
         // Method Overload - new member
-        private void sendMessagetoAll(string user_name)
+        private void sendListOfUsers(string user_name)
         {
             string userList = "";
 
@@ -165,8 +165,6 @@ namespace MyWinformApp_Server
             }
             foreach (var pair in clientList)
             {
-                date = DateTime.Now.ToString("yyyy.MM.dd. HH.mm.ss");
-
                 TcpClient client = pair.Key as TcpClient;
                 NetworkStream stream = client.GetStream();
 
@@ -175,11 +173,6 @@ namespace MyWinformApp_Server
                 stream.Write(buffer, 0, buffer.Length);
                 stream.Flush();
             }
-        }
-
-        private void sendUserList()
-        {
-
         }
 
         public void displayText(string text)
