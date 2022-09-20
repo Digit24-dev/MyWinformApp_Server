@@ -37,6 +37,7 @@ namespace MyWinformApp_Server
             this.ListBox_Users = new System.Windows.Forms.ListBox();
             this.label2 = new System.Windows.Forms.Label();
             this.Button_Exit = new System.Windows.Forms.Button();
+            this.textBox_UserCount = new System.Windows.Forms.TextBox();
             this.SuspendLayout();
             // 
             // Button_Start
@@ -113,11 +114,20 @@ namespace MyWinformApp_Server
             this.Button_Exit.UseVisualStyleBackColor = true;
             this.Button_Exit.Click += new System.EventHandler(this.Button_Exit_Click);
             // 
+            // textBox_UserCount
+            // 
+            this.textBox_UserCount.Location = new System.Drawing.Point(346, 21);
+            this.textBox_UserCount.Name = "textBox_UserCount";
+            this.textBox_UserCount.ReadOnly = true;
+            this.textBox_UserCount.Size = new System.Drawing.Size(100, 21);
+            this.textBox_UserCount.TabIndex = 9;
+            // 
             // Main
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 12F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(636, 450);
+            this.Controls.Add(this.textBox_UserCount);
             this.Controls.Add(this.Button_Exit);
             this.Controls.Add(this.label2);
             this.Controls.Add(this.ListBox_Users);
@@ -127,7 +137,6 @@ namespace MyWinformApp_Server
             this.Controls.Add(this.Button_Stop);
             this.Controls.Add(this.Button_Start);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
-            this.ImeMode = System.Windows.Forms.ImeMode.NoControl;
             this.Name = "Main";
             this.Text = "Form1";
             this.Load += new System.EventHandler(this.Main_Load);
@@ -146,6 +155,7 @@ namespace MyWinformApp_Server
         private System.Windows.Forms.ListBox ListBox_Users;
         private System.Windows.Forms.Label label2;
         private System.Windows.Forms.Button Button_Exit;
+        private System.Windows.Forms.TextBox textBox_UserCount;
     }
 }
 

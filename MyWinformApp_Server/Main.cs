@@ -17,9 +17,9 @@ namespace MyWinformApp_Server
     {
         string message = string.Empty;
 
-        const int portNumber = 9000;
+        const int portNumber = 8000;
         
-        static int userCount = 0;
+        int userCount = 0;
         string date;
 
         public Dictionary<TcpClient, string> clientList = new Dictionary<TcpClient, string>();
@@ -42,7 +42,7 @@ namespace MyWinformApp_Server
 
         private void InitSocket()
         {
-            server = new TcpListener(IPAddress.Any, 8000);
+            server = new TcpListener(IPAddress.Any, portNumber);
             clientSocket = default(TcpClient);
             server.Start();
             
@@ -67,10 +67,12 @@ namespace MyWinformApp_Server
                     {
                         this.Invoke(new MethodInvoker(delegate ()
                         {
+                            textBox_UserCount.Text = userCount.ToString();
                             ListBox_Users.Items.Add(user_name);
                         }));
                     }
 
+                    // Async UserList Update.
                     sendListOfUsers(user_name);
 
                     handleClient h_client = new handleClient();
@@ -106,13 +108,17 @@ namespace MyWinformApp_Server
             if(message.Equals("/exit"))
             {
                 string DisplayMessage = user_name + " leaves the chat.";
+                userCount--;
                 if (this.InvokeRequired)
                 {
                     this.Invoke(new MethodInvoker(delegate ()
                     {
+                        textBox_UserCount.Text = userCount.ToString();
                         ListBox_Users.Items.Remove(user_name);
                     }));
                 }
+
+                // Async UserList Update.
                 displayText(DisplayMessage);
                 sendMessagetoAll(DisplayMessage, user_name, true);
             }else
