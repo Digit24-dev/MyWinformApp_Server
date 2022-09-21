@@ -105,6 +105,7 @@ namespace MyWinformApp_Server
 
         private void onReceived(string message, string user_name)
         {
+            // 스레드 프로세스가 너무 길음. 컨트롤 내부로 Invoke 필요.
             if(message.Equals("/exit"))
             {
                 string DisplayMessage = user_name + " leaves the chat.";
@@ -160,7 +161,9 @@ namespace MyWinformApp_Server
             }
         }
 
-        // Method Overload - new member
+        // Method Overload -> 메소드 오버로드로 하지말고 새로운 메소드로 선언
+        // 새로운 유저가 입장할 시에 모든 유저에게 유저 리스트를 전송한다.
+        // 컨트롤 내용을 어떻게 전달할지가 중요하다.
         private void sendListOfUsers(string user_name)
         {
             string userList = "";
