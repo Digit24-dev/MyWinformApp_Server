@@ -15,12 +15,17 @@ namespace MyWinformApp_Server
 {
     public partial class Main : Form
     {
-        string message = string.Empty;
-
         const int portNumber = 8000;
         
         int userCount = 0;
         string date;
+
+        object threadLock;
+
+        Queue<string> userToRemove = new Queue<string>();
+
+        bool onReceiveFlag_Exit = false;
+        bool onReceiveFlag_Join = false;
 
         public Dictionary<TcpClient, string> clientList = new Dictionary<TcpClient, string>();
 
@@ -103,6 +108,24 @@ namespace MyWinformApp_Server
                 clientList.Remove(clientSocket);
         }
 
+        /// <summary>
+        /// 새로운 스레드 분기를 시켜 사용자 목록에서 제거할 대상을 큐에 삽입하고 해당 큐에 값이 있으면 UI 컨트롤을 하는 메소드.
+        /// 서버에 스레드 하나가 추가 필요.
+        /// </summary>
+        /// <param name="user_name"></param>
+        private void onReceived_UIController(string user_name)
+        {
+            if (this.InvokeRequired)
+            {
+                this.Invoke(new MethodInvoker(delegate ()
+                {
+                    textBox_UserCount.Text = userCount.ToString();
+                    ListBox_Users.Items.Remove(user_name);
+                }));
+            }
+            displayText(user_name + "leaves the chat.");
+        }
+
         private void onReceived(string message, string user_name)
         {
             // 스레드 프로세스가 너무 길음. 컨트롤 내부로 Invoke 필요.
@@ -110,17 +133,16 @@ namespace MyWinformApp_Server
             {
                 string DisplayMessage = user_name + " leaves the chat.";
                 userCount--;
-                if (this.InvokeRequired)
+
+                // Thread Synchronization
+                lock (threadLock)
                 {
-                    this.Invoke(new MethodInvoker(delegate ()
-                    {
-                        textBox_UserCount.Text = userCount.ToString();
-                        ListBox_Users.Items.Remove(user_name);
-                    }));
+                    onReceiveFlag_Exit = true;
+                    userToRemove.Enqueue(user_name);
                 }
 
                 // Async UserList Update.
-                displayText(DisplayMessage);
+                displayText(DisplayMessage); // 이 구문이 스레드 성능에 영향을 주는 것이 아닌지 검토 필요.
                 sendMessagetoAll(DisplayMessage, user_name, true);
             }else
             {
