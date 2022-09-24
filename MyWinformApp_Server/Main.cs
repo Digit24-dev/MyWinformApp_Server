@@ -19,8 +19,7 @@ namespace MyWinformApp_Server
         
         int userCount = 0;
         string date;
-
-        object threadLock;
+        private object threadLock = new object();
 
         Queue<string> userToRemove = new Queue<string>();
 
@@ -38,6 +37,10 @@ namespace MyWinformApp_Server
             Thread thread = new Thread(InitSocket);
             thread.IsBackground = true;
             thread.Start();
+
+            Thread thread_UIController = new Thread(onReceived_UIController);
+            thread_UIController.IsBackground = true;
+            thread_UIController.Start();
         }
 
         private void Main_Load(object sender, EventArgs e)
@@ -113,17 +116,28 @@ namespace MyWinformApp_Server
         /// 서버에 스레드 하나가 추가 필요.
         /// </summary>
         /// <param name="user_name"></param>
-        private void onReceived_UIController(string user_name)
+        private void onReceived_UIController()
         {
-            if (this.InvokeRequired)
+            while (true)
             {
-                this.Invoke(new MethodInvoker(delegate ()
+                if (onReceiveFlag_Exit)
                 {
-                    textBox_UserCount.Text = userCount.ToString();
-                    ListBox_Users.Items.Remove(user_name);
-                }));
+                    if (this.InvokeRequired)
+                    {
+                        this.Invoke(new MethodInvoker(delegate ()
+                        {
+                            lock (threadLock)
+                            {
+                                textBox_UserCount.Text = userCount.ToString();
+                                string tempValue = userToRemove.Dequeue();
+                                ListBox_Users.Items.Remove(tempValue);
+                                displayText(tempValue + " leaves the chat.");
+                                onReceiveFlag_Exit = false;
+                            }
+                        }));
+                    }
+                }
             }
-            displayText(user_name + "leaves the chat.");
         }
 
         private void onReceived(string message, string user_name)
@@ -132,13 +146,14 @@ namespace MyWinformApp_Server
             if(message.Equals("/exit"))
             {
                 string DisplayMessage = user_name + " leaves the chat.";
-                userCount--;
 
                 // Thread Synchronization
                 lock (threadLock)
                 {
-                    onReceiveFlag_Exit = true;
+                    displayText("into ThreadLock");
+                    userCount--;
                     userToRemove.Enqueue(user_name);
+                    onReceiveFlag_Exit = true;
                 }
 
                 // Async UserList Update.
