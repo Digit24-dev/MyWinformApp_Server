@@ -17,8 +17,9 @@ namespace MyWinformApp_Server
     {
         const int portNumber = 8000;
         
-        int userCount = 0;
-        string date;
+        private int userCount = 0;
+        private string date;
+
         private object threadLock = new object();
 
         Queue<string> userToRemove = new Queue<string>();
@@ -60,7 +61,6 @@ namespace MyWinformApp_Server
             {
                 try
                 {
-                    userCount++;
                     clientSocket = server.AcceptTcpClient();
                     displayText(">> Connection Accepted");
 
@@ -75,12 +75,15 @@ namespace MyWinformApp_Server
                     {
                         this.Invoke(new MethodInvoker(delegate ()
                         {
+                            userCount++;
                             textBox_UserCount.Text = userCount.ToString();
+                            textBox_UserCount.Show();
                             ListBox_Users.Items.Add(user_name);
                         }));
                     }
 
                     // Async UserList Update.
+                    onReceiveFlag_Join = true;
                     sendListOfUsers(user_name);
 
                     handleClient h_client = new handleClient();
@@ -129,12 +132,26 @@ namespace MyWinformApp_Server
                             lock (threadLock)
                             {
                                 textBox_UserCount.Text = userCount.ToString();
+                                textBox_UserCount.Show();
+
                                 string tempValue = userToRemove.Dequeue();
                                 ListBox_Users.Items.Remove(tempValue);
-                                displayText(tempValue + " leaves the chat.");
                                 onReceiveFlag_Exit = false;
                             }
                         }));
+                    }
+                }
+                else if(onReceiveFlag_Join)
+                {
+                    if(this.InvokeRequired)
+                    {
+                        this.Invoke(new MethodInvoker(delegate ()
+                       {
+                           lock (threadLock)
+                           {
+                               onReceiveFlag_Join = false;
+                           }
+                       }));
                     }
                 }
             }
@@ -150,8 +167,7 @@ namespace MyWinformApp_Server
                 // Thread Synchronization
                 lock (threadLock)
                 {
-                    displayText("into ThreadLock");
-                    userCount--;
+                    userCount = userCount - 1;
                     userToRemove.Enqueue(user_name);
                     onReceiveFlag_Exit = true;
                 }
@@ -207,7 +223,10 @@ namespace MyWinformApp_Server
 
             foreach (var pair in clientList)
             {
+                if (pair.Value.Equals(""))
+                    break;
                 userList += pair.Value + "$";
+                //displayText(userList);
             }
             foreach (var pair in clientList)
             {
@@ -237,7 +256,8 @@ namespace MyWinformApp_Server
 
         private void Button_Start_Click(object sender, EventArgs e)
         {
-            
+            textBox_UserCount.Text = userCount.ToString();
+            textBox_UserCount.Show();
         }
 
         private void Button_Stop_Click(object sender, EventArgs e)
