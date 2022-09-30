@@ -10,6 +10,14 @@ using System.Windows.Forms;
 using System.Net;
 using System.Net.Sockets;
 
+/// <summary>
+/// To do List.
+/// - 서버 종료되면 해당 날짜와 채팅의 로그를 데이터로 남기기. (데이터 형식은 미정.)
+/// - 귓속말
+/// - 파일 전송
+/// - 
+/// </summary>
+
 
 namespace MyWinformApp_Server
 {
