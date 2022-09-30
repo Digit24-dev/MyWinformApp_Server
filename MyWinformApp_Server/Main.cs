@@ -234,7 +234,6 @@ namespace MyWinformApp_Server
                 if (pair.Value.Equals(""))
                     break;
                 userList += pair.Value + "$";
-                //displayText(userList);
             }
             foreach (var pair in clientList)
             {
@@ -245,6 +244,7 @@ namespace MyWinformApp_Server
 
                 stream.Write(buffer, 0, buffer.Length);
                 stream.Flush();
+                displayText(userList);
             }
         }
 
