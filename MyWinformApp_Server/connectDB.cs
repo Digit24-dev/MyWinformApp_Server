@@ -10,7 +10,7 @@ namespace MyWinformApp_Server
 {
     class connectDB
     {
-        string connString = @"Data Source = 127.0.0.1; Initial Catalog=northwind; User ID=digi24;Password=qwe123!@#";
+        string connString = @"Data Source = 127.0.0.1; Initial Catalog=northwind; User ID=;Password=";
         public SqlConnection conn;
 
         public void Open()
