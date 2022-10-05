@@ -50,6 +50,9 @@ namespace MyWinformApp_Server
             Thread thread_UIController = new Thread(onReceived_UIController);
             thread_UIController.IsBackground = true;
             thread_UIController.Start();
+            
+            connectDB db = new connectDB();
+            db.Open();
 
             /*
              * 데이터 베이스 입력 구문.

@@ -5,15 +5,15 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Data.SqlClient;
 using System.Data;
-using MySql.Data;
+//using MySql.Data;
 
 namespace MyWinformApp_Server
 {
     class connectDB : IDataBase_Connection
     {
-        string connString = @"Data Source = 127.0.0.1; Initial Catalog=northwind; User ID=;Password=";
+        string connString = string.Format("Server={0}; Database={1}; Uid={2}; Pwd={3}", "127.0.0.1", "chatlogs", "digi24", "qwe123!@#");
         public SqlConnection conn;
-
+        
         public void Open()
         {
             try
