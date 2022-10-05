@@ -9,7 +9,7 @@ using MySql.Data;
 
 namespace MyWinformApp_Server
 {
-    class connectDB
+    class connectDB : IDataBase_Connection
     {
         string connString = @"Data Source = 127.0.0.1; Initial Catalog=northwind; User ID=;Password=";
         public SqlConnection conn;
@@ -67,5 +67,6 @@ namespace MyWinformApp_Server
             
             return 0;
         }
+
     }
 }
