@@ -9,6 +9,7 @@ using System.Threading;
 using System.Windows.Forms;
 using System.Net;
 using System.Net.Sockets;
+using MySql.Data.MySqlClient;
 
 /// <summary>
 /// To do List.

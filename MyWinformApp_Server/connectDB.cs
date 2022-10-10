@@ -5,13 +5,12 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Data.SqlClient;
 using System.Data;
-//using MySql.Data;
 
 namespace MyWinformApp_Server
 {
     class connectDB : IDataBase_Connection
     {
-        string connString = string.Format("Server={0}; Database={1}; Uid={2}; Pwd={3}", "127.0.0.1", "chatlogs", "digi24", "qwe123!@#");
+        string connString = string.Format("Server={0}; Database={1}; Uid={2}; Pwd={3};", "127.0.0.1", "chatlogs", "root", "qwe123!@#");
         public SqlConnection conn;
         
         public void Open()
