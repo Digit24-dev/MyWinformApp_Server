@@ -44,6 +44,7 @@ namespace MyWinformApp_Server
         public Main()
         {
             InitializeComponent();
+
             Thread thread = new Thread(InitSocket);
             thread.IsBackground = true;
             thread.Start();
@@ -51,24 +52,12 @@ namespace MyWinformApp_Server
             Thread thread_UIController = new Thread(onReceived_UIController);
             thread_UIController.IsBackground = true;
             thread_UIController.Start();
-            
-            connectDB db = new connectDB();
-            db.Open();
-
-            /*
-             * 데이터 베이스 입력 구문.
-             * 
-             * connectDB db = new connectDB();
-             * db.Open();
-             * 
-             * 
-             */
-
         }
 
         private void Main_Load(object sender, EventArgs e)
         {
-            
+            connectDB db = new connectDB();
+            db.Open();
         }
 
         private void InitSocket()

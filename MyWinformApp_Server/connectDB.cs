@@ -5,16 +5,23 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Data.SqlClient;
 using System.Data;
+using MySql.Data.MySqlClient;
 
 namespace MyWinformApp_Server
 {
-    class connectDB : IDataBase_Connection
+    class connectDB
     {
-        string connString = string.Format("Server={0}; Database={1}; Uid={2}; Pwd={3};", "127.0.0.1", "chatlogs", "root", "qwe123!@#");
+        string connString;
         public SqlConnection conn;
-        
+
+        public connectDB()
+        {
+            connString = "Server=localhost;Database=chatlog;Uid=root;Pwd=qwe123!@#;";
+        }
+
         public void Open()
         {
+
             try
             {
                 if(conn == null)
@@ -25,6 +32,8 @@ namespace MyWinformApp_Server
             }
             catch (Exception ex)
             {
+                //conn.Close();
+                //Console.WriteLine(ex.Message);
                 throw ex;
             }
         }
