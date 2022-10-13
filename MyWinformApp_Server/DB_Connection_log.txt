@@ -1,3 +1,7 @@
 ﻿1. MariaDB를 연결하기 위하여 HeidiSQL를 사용하여 연결 시도. 마리아 DB를 깔았으니 DBMS가 필요
 2. SQL Server configuration 2019 설치
 3. 서버에 연결했지만 로그인하는 동안 오류가 발생했습니다. (provider: Shared Memory Provider, error: 0 - 파이프의 다른 끝에 프로세스가 없습니다.) / SQL Server Exception 오류가 계속 발생 중.
+
+22.10.13
+
+- 사용자 'root'이(가) 로그인하지 못했습니다.'

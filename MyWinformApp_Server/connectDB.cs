@@ -16,7 +16,7 @@ namespace MyWinformApp_Server
 
         public connectDB()
         {
-            connString = "Server=localhost;Database=chatlog;Uid=root;Pwd=qwe123!@#;";
+            connString = "Server=;Database=chatlog;Uid=root;Pwd=qwe123!@#;";
         }
 
         public void Open()
@@ -33,7 +33,7 @@ namespace MyWinformApp_Server
             catch (Exception ex)
             {
                 //conn.Close();
-                //Console.WriteLine(ex.Message);
+                Console.WriteLine(ex.Message);
                 throw ex;
             }
         }
