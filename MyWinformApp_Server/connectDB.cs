@@ -13,6 +13,9 @@ namespace MyWinformApp_Server
     {
         string connString;
         public SqlConnection conn;
+        MySqlConnection connection = new MySqlConnection("Server=;Database=chatlog;Uid=root;Pwd=qwe123!@#;");
+        MySqlCommand cmd;
+        MySqlDataReader dr;
 
         public connectDB()
         {
@@ -26,8 +29,9 @@ namespace MyWinformApp_Server
             {
                 if(conn == null)
                 {
-                    conn = new SqlConnection(connString);
-                    conn.Open();
+                    //conn = new SqlConnection(connString);
+                    //conn.Open();
+                    connection.Open();
                 }
             }
             catch (Exception ex)
@@ -53,13 +57,25 @@ namespace MyWinformApp_Server
             }
         }
 
-        public DataSet GetDataSet(string sql)
+        public String GetDataSet(string sql)
         {
+            /*
             SqlDataAdapter da = new SqlDataAdapter();
-            da.SelectCommand = new SqlCommand(sql, conn);
+            da.SelectCommand = new SqlCommand(sql, cnnn);
             DataSet ds = new DataSet();
             da.Fill(ds);
-            return ds;
+            */
+
+            cmd = new MySqlCommand(sql, connection);
+            dr = cmd.ExecuteReader();
+            String line = "";
+
+            while (dr.Read())
+            {
+                line = dr["clientName"].ToString();
+            }
+
+            return line;
         }
 
         /// <summary>

@@ -41,6 +41,8 @@ namespace MyWinformApp_Server
         TcpListener server = null;
         TcpClient clientSocket = null;
 
+        connectDB db;
+
         public Main()
         {
             InitializeComponent();
@@ -56,7 +58,7 @@ namespace MyWinformApp_Server
 
         private void Main_Load(object sender, EventArgs e)
         {
-            connectDB db = new connectDB();
+            db = new connectDB();
             db.Open();
         }
 
@@ -273,7 +275,8 @@ namespace MyWinformApp_Server
 
         private void Button_Stop_Click(object sender, EventArgs e)
         {
-            
+            String temp = db.GetDataSet("select * from logs;");
+            richTextBox1.AppendText("from Database! >> " + temp);
         }
 
         private void Button_Exit_Click(object sender, EventArgs e)
@@ -285,6 +288,11 @@ namespace MyWinformApp_Server
         private void TextBox_Status_KeyUp(object sender, KeyEventArgs e)
         {
             sendMessagetoAll("ping", "", true);
+        }
+
+        private void Main_FormClosing(object sender, FormClosingEventArgs e)
+        {
+            db.Close();
         }
     }
 }
