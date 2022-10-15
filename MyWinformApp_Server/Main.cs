@@ -276,7 +276,7 @@ namespace MyWinformApp_Server
         private void Button_Stop_Click(object sender, EventArgs e)
         {
             String temp = db.GetDataSet("select * from logs;");
-            richTextBox1.AppendText("from Database! >> " + temp);
+            richTextBox1.AppendText("from Database! >> " + temp + Environment.NewLine);
         }
 
         private void Button_Exit_Click(object sender, EventArgs e)

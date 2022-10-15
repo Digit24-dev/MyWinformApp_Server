@@ -15,7 +15,6 @@ namespace MyWinformApp_Server
         public SqlConnection conn;
         MySqlConnection connection = new MySqlConnection("Server=;Database=chatlog;Uid=root;Pwd=qwe123!@#;");
         MySqlCommand cmd;
-        MySqlDataReader dr;
 
         public connectDB()
         {
@@ -67,14 +66,14 @@ namespace MyWinformApp_Server
             */
 
             cmd = new MySqlCommand(sql, connection);
-            dr = cmd.ExecuteReader();
+            MySqlDataReader dr = cmd.ExecuteReader();
             String line = "";
 
             while (dr.Read())
             {
                 line = dr["clientName"].ToString();
             }
-
+            dr.Close();
             return line;
         }
 
