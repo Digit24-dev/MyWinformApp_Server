@@ -11,14 +11,18 @@ namespace MyWinformApp_Server
 {
     class connectDB
     {
-        string connString;
+        const string dbName = "chatlogs";
+        const string tableName = "chatlog";
+
+        const string connectionString = "Server=localhost;Database=" + dbName + ";Uid=root;Pwd=qwe123!@#;";
+
         public SqlConnection conn;
-        MySqlConnection connection = new MySqlConnection("Server=;Database=chatlog;Uid=root;Pwd=qwe123!@#;");
+        MySqlConnection connection = new MySqlConnection(connectionString);
         MySqlCommand cmd;
 
         public connectDB()
         {
-            connString = "Server=;Database=chatlog;Uid=root;Pwd=qwe123!@#;";
+            
         }
 
         public void Open()
@@ -56,15 +60,14 @@ namespace MyWinformApp_Server
             }
         }
 
+         public bool IsOpen()
+        {
+            if (conn != null)   return true;
+            return false;
+        }
+
         public String GetDataSet(string sql)
         {
-            /*
-            SqlDataAdapter da = new SqlDataAdapter();
-            da.SelectCommand = new SqlCommand(sql, cnnn);
-            DataSet ds = new DataSet();
-            da.Fill(ds);
-            */
-
             cmd = new MySqlCommand(sql, connection);
             MySqlDataReader dr = cmd.ExecuteReader();
             String line = "";
@@ -75,6 +78,19 @@ namespace MyWinformApp_Server
             }
             dr.Close();
             return line;
+        }
+
+        public int SetData(string sql)
+        {
+            try
+            {
+                cmd = new MySqlCommand(sql, connection);
+                return cmd.ExecuteNonQuery();
+            }
+            catch (Exception)
+            {
+                return -1;  // Sql 쿼리 오류
+            }
         }
 
         /// <summary>

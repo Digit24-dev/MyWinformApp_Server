@@ -25,7 +25,10 @@ namespace MyWinformApp_Server
     public partial class Main : Form
     {
         const int portNumber = 8000;
-        
+
+        const string dbName = "chatlog";
+        const string tableName = "chatlog";
+
         private int userCount = 0;
         private string date;
 
@@ -275,12 +278,14 @@ namespace MyWinformApp_Server
 
         private void Button_Stop_Click(object sender, EventArgs e)
         {
-            String temp = db.GetDataSet("select * from logs;");
+            String temp = db.GetDataSet("select * from " + dbName + ";");
             richTextBox1.AppendText("from Database! >> " + temp + Environment.NewLine);
         }
 
         private void Button_Exit_Click(object sender, EventArgs e)
         {
+            // 데이터 베이스에 저장.
+            db.Close();
             server.Stop();
             this.Close();
         }
@@ -292,7 +297,18 @@ namespace MyWinformApp_Server
 
         private void Main_FormClosing(object sender, FormClosingEventArgs e)
         {
-            db.Close();
+
+            try
+            {
+                if (db.IsOpen())
+                {
+                    db.Close();
+                }
+            }
+            catch (Exception)
+            {
+                MessageBox.Show("DB 가 제대로 닫히지 않았습니다.");
+            }
         }
     }
 }
