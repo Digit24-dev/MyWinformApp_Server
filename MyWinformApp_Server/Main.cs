@@ -132,7 +132,7 @@ namespace MyWinformApp_Server
 
         /// <summary>
         /// 새로운 스레드 분기를 시켜 사용자 목록에서 제거할 대상을 큐에 삽입하고 해당 큐에 값이 있으면 UI 컨트롤을 하는 메소드.
-        /// 서버에 스레드 하나가 추가 필요.
+        /// 그 밖에 UI 컨트롤을 전체적으로 담당하는 역할.
         /// </summary>
         /// <param name="user_name"></param>
         private void onReceived_UIController()
@@ -233,6 +233,10 @@ namespace MyWinformApp_Server
         // Method Overload -> 메소드 오버로드로 하지말고 새로운 메소드로 선언
         // 새로운 유저가 입장할 시에 모든 유저에게 유저 리스트를 전송한다.
         // 컨트롤 내용을 어떻게 전달할지가 중요하다.
+        /// <summary>
+        /// 모든 유저에게 현재 접속 중인 유저 리스트를 문자열로 전송하는 메소드입니다. 문자열은 '$'로 구분되어 전송됩니다.
+        /// </summary>
+        /// <param name="user_name"></param>
         private void sendListOfUsers(string user_name)
         {
             string userList = "";

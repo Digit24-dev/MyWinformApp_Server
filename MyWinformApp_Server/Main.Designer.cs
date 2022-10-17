@@ -29,8 +29,8 @@ namespace MyWinformApp_Server
         /// </summary>
         private void InitializeComponent()
         {
-            this.Button_Start = new System.Windows.Forms.Button();
-            this.Button_Stop = new System.Windows.Forms.Button();
+            this.Button_UpdateUserCount = new System.Windows.Forms.Button();
+            this.Button_DB_test = new System.Windows.Forms.Button();
             this.richTextBox1 = new System.Windows.Forms.RichTextBox();
             this.TextBox_Status = new System.Windows.Forms.TextBox();
             this.label1 = new System.Windows.Forms.Label();
@@ -38,27 +38,28 @@ namespace MyWinformApp_Server
             this.label2 = new System.Windows.Forms.Label();
             this.Button_Exit = new System.Windows.Forms.Button();
             this.textBox_UserCount = new System.Windows.Forms.TextBox();
+            this.label = new System.Windows.Forms.Label();
             this.SuspendLayout();
             // 
-            // Button_Start
+            // Button_UpdateUserCount
             // 
-            this.Button_Start.Location = new System.Drawing.Point(12, 48);
-            this.Button_Start.Name = "Button_Start";
-            this.Button_Start.Size = new System.Drawing.Size(75, 23);
-            this.Button_Start.TabIndex = 0;
-            this.Button_Start.Text = "Start";
-            this.Button_Start.UseVisualStyleBackColor = true;
-            this.Button_Start.Click += new System.EventHandler(this.Button_Start_Click);
+            this.Button_UpdateUserCount.Location = new System.Drawing.Point(346, 49);
+            this.Button_UpdateUserCount.Name = "Button_UpdateUserCount";
+            this.Button_UpdateUserCount.Size = new System.Drawing.Size(100, 23);
+            this.Button_UpdateUserCount.TabIndex = 0;
+            this.Button_UpdateUserCount.Text = "Update Counts";
+            this.Button_UpdateUserCount.UseVisualStyleBackColor = true;
+            this.Button_UpdateUserCount.Click += new System.EventHandler(this.Button_Start_Click);
             // 
-            // Button_Stop
+            // Button_DB_test
             // 
-            this.Button_Stop.Location = new System.Drawing.Point(93, 48);
-            this.Button_Stop.Name = "Button_Stop";
-            this.Button_Stop.Size = new System.Drawing.Size(75, 24);
-            this.Button_Stop.TabIndex = 1;
-            this.Button_Stop.Text = "Stop";
-            this.Button_Stop.UseVisualStyleBackColor = true;
-            this.Button_Stop.Click += new System.EventHandler(this.Button_Stop_Click);
+            this.Button_DB_test.Location = new System.Drawing.Point(93, 87);
+            this.Button_DB_test.Name = "Button_DB_test";
+            this.Button_DB_test.Size = new System.Drawing.Size(75, 24);
+            this.Button_DB_test.TabIndex = 1;
+            this.Button_DB_test.Text = "DB Test";
+            this.Button_DB_test.UseVisualStyleBackColor = true;
+            this.Button_DB_test.Click += new System.EventHandler(this.Button_Stop_Click);
             // 
             // richTextBox1
             // 
@@ -106,7 +107,7 @@ namespace MyWinformApp_Server
             // 
             // Button_Exit
             // 
-            this.Button_Exit.Location = new System.Drawing.Point(174, 48);
+            this.Button_Exit.Location = new System.Drawing.Point(174, 19);
             this.Button_Exit.Name = "Button_Exit";
             this.Button_Exit.Size = new System.Drawing.Size(75, 24);
             this.Button_Exit.TabIndex = 8;
@@ -122,11 +123,21 @@ namespace MyWinformApp_Server
             this.textBox_UserCount.Size = new System.Drawing.Size(100, 21);
             this.textBox_UserCount.TabIndex = 9;
             // 
+            // label
+            // 
+            this.label.AutoSize = true;
+            this.label.Location = new System.Drawing.Point(272, 25);
+            this.label.Name = "label";
+            this.label.Size = new System.Drawing.Size(68, 12);
+            this.label.TabIndex = 10;
+            this.label.Text = "User Count";
+            // 
             // Main
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 12F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(636, 450);
+            this.Controls.Add(this.label);
             this.Controls.Add(this.textBox_UserCount);
             this.Controls.Add(this.Button_Exit);
             this.Controls.Add(this.label2);
@@ -134,8 +145,8 @@ namespace MyWinformApp_Server
             this.Controls.Add(this.label1);
             this.Controls.Add(this.TextBox_Status);
             this.Controls.Add(this.richTextBox1);
-            this.Controls.Add(this.Button_Stop);
-            this.Controls.Add(this.Button_Start);
+            this.Controls.Add(this.Button_DB_test);
+            this.Controls.Add(this.Button_UpdateUserCount);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
             this.Name = "Main";
             this.Text = "Form1";
@@ -148,8 +159,8 @@ namespace MyWinformApp_Server
 
         #endregion
 
-        private System.Windows.Forms.Button Button_Start;
-        private System.Windows.Forms.Button Button_Stop;
+        private System.Windows.Forms.Button Button_UpdateUserCount;
+        private System.Windows.Forms.Button Button_DB_test;
         private System.Windows.Forms.RichTextBox richTextBox1;
         private System.Windows.Forms.TextBox TextBox_Status;
         private System.Windows.Forms.Label label1;
@@ -157,6 +168,7 @@ namespace MyWinformApp_Server
         private System.Windows.Forms.Label label2;
         private System.Windows.Forms.Button Button_Exit;
         private System.Windows.Forms.TextBox textBox_UserCount;
+        private System.Windows.Forms.Label label;
     }
 }
 
