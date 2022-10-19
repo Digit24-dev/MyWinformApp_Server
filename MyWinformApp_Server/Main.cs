@@ -45,11 +45,11 @@ namespace MyWinformApp_Server
         TcpClient clientSocket = null;
 
         connectDB db;
-
+        
         public Main()
         {
             InitializeComponent();
-
+            
             Thread thread = new Thread(InitSocket);
             thread.IsBackground = true;
             thread.Start();
@@ -301,7 +301,6 @@ namespace MyWinformApp_Server
 
         private void Main_FormClosing(object sender, FormClosingEventArgs e)
         {
-
             try
             {
                 if (db.IsOpen())
@@ -313,6 +312,11 @@ namespace MyWinformApp_Server
             {
                 MessageBox.Show("DB 가 제대로 닫히지 않았습니다.");
             }
+        }
+
+        private void timer1_Tick(object sender, EventArgs e)
+        {
+
         }
     }
 }

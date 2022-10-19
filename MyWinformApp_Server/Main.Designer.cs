@@ -29,6 +29,7 @@ namespace MyWinformApp_Server
         /// </summary>
         private void InitializeComponent()
         {
+            this.components = new System.ComponentModel.Container();
             this.Button_UpdateUserCount = new System.Windows.Forms.Button();
             this.Button_DB_test = new System.Windows.Forms.Button();
             this.richTextBox1 = new System.Windows.Forms.RichTextBox();
@@ -39,6 +40,7 @@ namespace MyWinformApp_Server
             this.Button_Exit = new System.Windows.Forms.Button();
             this.textBox_UserCount = new System.Windows.Forms.TextBox();
             this.label = new System.Windows.Forms.Label();
+            this.timer1 = new System.Windows.Forms.Timer(this.components);
             this.SuspendLayout();
             // 
             // Button_UpdateUserCount
@@ -132,6 +134,10 @@ namespace MyWinformApp_Server
             this.label.TabIndex = 10;
             this.label.Text = "User Count";
             // 
+            // timer1
+            // 
+            this.timer1.Tick += new System.EventHandler(this.timer1_Tick);
+            // 
             // Main
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 12F);
@@ -169,6 +175,7 @@ namespace MyWinformApp_Server
         private System.Windows.Forms.Button Button_Exit;
         private System.Windows.Forms.TextBox textBox_UserCount;
         private System.Windows.Forms.Label label;
+        private System.Windows.Forms.Timer timer1;
     }
 }
 

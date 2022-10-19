@@ -35,3 +35,19 @@
   - 일정 대화 수 : 버퍼 5MB 마다
 
  기준을 정했으니, 목표를 설정하고 해당 기준에 따라 데이터 베이스에 데이터를 삽입하자.
+
+
+ 22. 10. 19
+
+  DB에 저장 하기 위한 기준 중 일정시간 마다 저장하기 위해서는 카운터/타이머 가 필요하다.
+  WinForm에는 3가지의 타이머가 존재하며 사용되는 방식이 다르다.
+
+  - System.Windows.Forms.Timer
+  - System.Threading.Timer
+  - System.Timers.Timer
+
+  세 가지 모두 타이머의 기능을 수행하기는 하나, 실행되는 스레드의 위치가 다르므로 사용환경에 맞게 설계하여 사용하여야 한다.
+
+  - Windows.Forms.Timer는 UI의 동작, 컨트롤을 담당하는 Thread환경에서 실행된다.
+  https://m.blog.naver.com/PostView.naver?isHttpsRedirect=true&blogId=zic6188610&logNo=221029988476
+  참조
