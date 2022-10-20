@@ -51,3 +51,25 @@
   - Windows.Forms.Timer는 UI의 동작, 컨트롤을 담당하는 Thread환경에서 실행된다.
   https://m.blog.naver.com/PostView.naver?isHttpsRedirect=true&blogId=zic6188610&logNo=221029988476
   참조
+
+  [ 비동기 코드 방식 ]
+
+  - async 한정자
+  
+   메소드, 이벤트 처리기, 태스크, 람다식 등을 수식함으로써 C# 컴파일러가 이들을 호출하는 코드를 만날 때 호출 결과를 기다리지 않고 다음 코드로 이동하도록 실행 코드를 생성.
+   메소드/이벤트 처리기를 선언할 때 한정자들과 함께 사용.
+
+   public static async Task MyMethodAsync()
+   {
+   
+   }
+  
+  async 한정자로 된 메소드는 반환형식이 Task 혹은 Task<TResult> 또는 void 이어야 한다.
+
+  1. async로 한정한 void 형식 메소드는 await 연산자가 없어도 비동기로 실행된다.
+  2. async로 한정한 Task 또는 Task<TResult>를 반환하는 메소드/태스크/람다식은 await 연산자를 만나는 곳에서 호출자에게 제어를 돌려주며, await 연산자가 없는 경우 동기로 실행된다.
+
+
+
+  - await 연산자
+

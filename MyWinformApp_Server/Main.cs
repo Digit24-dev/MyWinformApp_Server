@@ -28,7 +28,7 @@ namespace MyWinformApp_Server
 
         const string dbName = "logs";
         const string tableName = "chatlog";
-
+        
         private int userCount = 0;
         private string date;
 
