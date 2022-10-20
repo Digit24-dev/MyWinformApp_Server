@@ -26,7 +26,7 @@ namespace MyWinformApp_Server
     {
         const int portNumber = 8000;
 
-        const string dbName = "chatlog";
+        const string dbName = "logs";
         const string tableName = "chatlog";
 
         private int userCount = 0;
@@ -45,7 +45,9 @@ namespace MyWinformApp_Server
         TcpClient clientSocket = null;
 
         connectDB db;
-        
+
+        DateTime time = DateTime.Today;
+
         public Main()
         {
             InitializeComponent();
@@ -193,7 +195,8 @@ namespace MyWinformApp_Server
                 sendMessagetoAll(DisplayMessage, user_name, true);
             }else
             {
-                string DisplayMessage = "[From client]" + user_name + " : " + message;
+                date = DateTime.Now.ToString("MM월dd일 HH:mm:ss");
+                string DisplayMessage = "[" + date + "]" + user_name + " : " + message;
                 displayText(DisplayMessage);
                 sendMessagetoAll(message, user_name, true);
             }
@@ -203,7 +206,7 @@ namespace MyWinformApp_Server
         {
             foreach(var pair in clientList)
             {
-                date = DateTime.Now.ToString("yyyy.MM.dd. HH.mm.ss");
+                date = DateTime.Now.ToString("MM월dd일 HH:mm:ss");
 
                 TcpClient client = pair.Key as TcpClient;
                 NetworkStream stream = client.GetStream();
@@ -213,7 +216,7 @@ namespace MyWinformApp_Server
                 {
                     if (message.Equals("/exit"))
                     {
-                        buffer = Encoding.Unicode.GetBytes(user_name + " leaves the chat.");
+                        buffer = Encoding.Unicode.GetBytes("[" + date + "]" + user_name + " leaves the chat.");
                     }
                     else
                     {
