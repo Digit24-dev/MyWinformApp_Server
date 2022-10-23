@@ -11,11 +11,6 @@ using System.Net;
 using System.Net.Sockets;
 using MySql.Data.MySqlClient;
 
-/// <summary>
-/// To do List.
-/// - 
-/// </summary>
-
 
 namespace MyWinformApp_Server
 {
@@ -57,6 +52,10 @@ namespace MyWinformApp_Server
             Thread thread_UIController = new Thread(onReceived_UIController);
             thread_UIController.IsBackground = true;
             thread_UIController.Start();
+
+            Thread timerThread = new Thread(Timer);
+            timerThread.IsBackground = true;
+            timerThread.Start();
         }
 
         private void Main_Load(object sender, EventArgs e)
@@ -65,6 +64,12 @@ namespace MyWinformApp_Server
             db.Open();
         }
 
+        #region TimerThread
+        private void Timer()
+        {
+            // Save logs when this thread invoked.
+        }
+        #endregion
 
         #region NetworkConnection
 
