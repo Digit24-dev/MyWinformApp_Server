@@ -101,7 +101,6 @@
     <Compile Include="connectDB.cs" />
     <Compile Include="handleClient.cs" />
     <Compile Include="IDataBase_Connection.cs" />
-    <Compile Include="Interface2.cs" />
     <Compile Include="Main.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -138,6 +137,7 @@
     <None Include="App.config" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="AboutThread.txt" />
     <Content Include="CleanCode.txt" />
     <Content Include="DB_Connection_log.txt" />
   </ItemGroup>
