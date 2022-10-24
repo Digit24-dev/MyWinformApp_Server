@@ -68,6 +68,7 @@ namespace MyWinformApp_Server
         private void Timer()
         {
             // Save logs when this thread invoked.
+            Thread.Sleep(1000);
         }
         #endregion
 

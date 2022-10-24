@@ -137,9 +137,10 @@
     <None Include="App.config" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="AboutThread.txt" />
+    <Content Include="Stduy_AboutThread.txt" />
     <Content Include="CleanCode.txt" />
-    <Content Include="DB_Connection_log.txt" />
+    <Content Include="Study_DB_Connection_log.txt" />
+    <Content Include="Study_UnitTest.txt" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

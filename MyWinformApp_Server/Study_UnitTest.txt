@@ -1,0 +1,42 @@
+﻿
+	22.10.24
+
+	단위 테스트 메소드 만들기.
+
+
+
+
+	첫 번째 테스트에서는 유효 금액(잔고보다 작고 0보다 큰 값)이 계좌로부터 올바른 금액을 인출하는지 확인합니다. 다음 메서드를 BankAccountTests 클래스에 추가합니다.
+
+    [TestMethod]
+    public void Debit_WithValidAmount_UpdatesBalance()
+    {
+        // Arrange
+        double beginningBalance = 11.99;
+        double debitAmount = 4.55;
+        double expected = 7.44;
+        BankAccount account = new BankAccount("Mr. Bryan Walton", beginningBalance);
+
+        // Act
+        account.Debit(debitAmount);
+
+        // Assert
+        double actual = account.Balance;
+        Assert.AreEqual(expected, actual, 0.001, "Account not debited correctly");
+    }
+
+    메서드가 간단함: 기초 잔액으로 새 BankAccount 개체를 설정한 다음, 유효한 금액을 인출합니다.
+    Assert.AreEqual 메서드를 사용하여 최종 잔액이 기대한 것과 같은지 확인합니다.
+    Assert.AreEqual, Assert.IsTrue 같은 메서드는 단위 테스트에서 자주 사용됩니다.
+    단위 테스트 작성에 관한 개념적 정보를 더 확인하고 싶다면 테스트 작성을 참조하세요.
+
+    
+    - 테스트 메서드 요구 사항
+
+    테스트 메서드는 다음 요구 사항을 충족해야 합니다.
+
+    [TestMethod] 특성으로 데코레이트됩니다.
+
+    void를 반환합니다.
+
+    매개 변수를 사용할 수 없습니다.
