@@ -39,6 +39,7 @@ namespace MyWinformApp_Server
             this.Button_Exit = new System.Windows.Forms.Button();
             this.textBox_UserCount = new System.Windows.Forms.TextBox();
             this.label = new System.Windows.Forms.Label();
+            this.button1 = new System.Windows.Forms.Button();
             this.SuspendLayout();
             // 
             // Button_UpdateUserCount
@@ -132,11 +133,22 @@ namespace MyWinformApp_Server
             this.label.TabIndex = 10;
             this.label.Text = "User Count";
             // 
+            // button1
+            // 
+            this.button1.Location = new System.Drawing.Point(174, 88);
+            this.button1.Name = "button1";
+            this.button1.Size = new System.Drawing.Size(75, 23);
+            this.button1.TabIndex = 11;
+            this.button1.Text = "Test";
+            this.button1.UseVisualStyleBackColor = true;
+            this.button1.Click += new System.EventHandler(this.button1_Click);
+            // 
             // Main
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 12F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(636, 450);
+            this.Controls.Add(this.button1);
             this.Controls.Add(this.label);
             this.Controls.Add(this.textBox_UserCount);
             this.Controls.Add(this.Button_Exit);
@@ -169,6 +181,7 @@ namespace MyWinformApp_Server
         private System.Windows.Forms.Button Button_Exit;
         private System.Windows.Forms.TextBox textBox_UserCount;
         private System.Windows.Forms.Label label;
+        private System.Windows.Forms.Button button1;
     }
 }
 

@@ -69,7 +69,8 @@ namespace MyWinformApp_Server
         private void Timer()
         {
             // Save logs when this thread invoked.
-            db.SetData("insert into " + dbTable + "values()");
+            //db.SetData("insert into " + dbTable + "values()");
+            
             // 데이터 나누는 것이 우선인 듯.
             Thread.Sleep(1000);
         }
@@ -334,5 +335,9 @@ namespace MyWinformApp_Server
         }
         #endregion
 
+        private void button1_Click(object sender, EventArgs e)
+        {
+
+        }
     }
 }
