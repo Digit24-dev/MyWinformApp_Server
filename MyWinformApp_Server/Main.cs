@@ -1,4 +1,6 @@
-﻿using System;
+﻿using Newtonsoft.Json;
+using Newtonsoft.Json.Serialization;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
@@ -12,9 +14,14 @@ using System.Net;
 using System.Net.Sockets;
 using MySql.Data.MySqlClient;
 
-
 namespace MyWinformApp_Server
 {
+    public class DataFormat
+    {
+        public DateTimeOffset Date { get; set; }
+        public string user { get; set; }
+        public string message { get; set; }
+    }
     public partial class Main : Form
     {
         #region ClassVariables
@@ -22,7 +29,7 @@ namespace MyWinformApp_Server
 
         const string dbName = "chatlog";
         const string dbTable = "chat";
-
+        
         private int userCount = 0;
         private string date;
 
@@ -44,7 +51,7 @@ namespace MyWinformApp_Server
 
         DateTime time = DateTime.Today;
 
-        
+        string jsonString = JsonSerializer.Create;
         #endregion
 
         public Main()
@@ -143,20 +150,28 @@ namespace MyWinformApp_Server
 
             displayText(" >> Server Started.");
 
+            // 서버 메인 스레드
             while (true)
             {
                 try
                 {
+                    // 클라이언트 소켓  열기
                     clientSocket = server.AcceptTcpClient();
                     displayText(">> Connection Accepted");
 
+                    // 네트워크 스트림
                     NetworkStream stream = clientSocket.GetStream();
                     byte[] buffer = new byte[1024];
                     int bytes = stream.Read(buffer, 0, buffer.Length);
+                    
+                    // 유저 이름 받아오기
                     string user_name = Encoding.Unicode.GetString(buffer, 0, bytes);
                     user_name = user_name.Substring(0, user_name.IndexOf("$"));
+
+                    // 클라이언트 딕셔너리에 추가
                     clientList.Add(clientSocket, user_name);
 
+                    // Winform UI Invoke
                     if (this.InvokeRequired)
                     {
                         this.Invoke(new MethodInvoker(delegate ()
@@ -172,11 +187,11 @@ namespace MyWinformApp_Server
                     onReceiveFlag_Join = true;
                     sendListOfUsers(user_name);
 
+                    // 클라리언트
                     handleClient h_client = new handleClient();
                     h_client.OnReceived += new handleClient.MessageDisplayHandler(onReceived);
                     h_client.OnDisconnected += new handleClient.DisconnectedHandler(OnDisconnected);
                     h_client.startClient(clientSocket, clientList);
-
                 }
                 catch (SocketException es)
                 {
@@ -291,6 +306,7 @@ namespace MyWinformApp_Server
                     else
                     {
                         buffer = Encoding.Unicode.GetBytes("[" + date + "]" + user_name + " : " + message);
+                        
                     }
                 }
                 else
@@ -385,6 +401,13 @@ namespace MyWinformApp_Server
             {
                 MessageBox.Show("DB 가 제대로 닫히지 않았습니다.");
             }
+        }
+        #endregion
+
+        #region Method
+        private void dataInject()
+        {
+
         }
         #endregion
 
