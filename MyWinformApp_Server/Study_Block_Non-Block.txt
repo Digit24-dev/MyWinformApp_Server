@@ -1,0 +1,27 @@
+﻿2022.10.29
+
+	< Blocking I/O vs Non-Blocking I/O >
+
+	Blocking I/O -> Synchronous
+
+	C언어의 File I/O 의 fopen() , fread() fwrite() 은 모두 Synchronous다.
+
+	<Block I/O 방식>
+	1) USERMODE : fprintf (Call) 
+	2) KERNEL	: File system (I/O)
+	3) Device Driver : I/O
+	4) H/W		: SSD/HDD (실제로는 안 갈수도 있음.)
+	5) Kernel Return
+	6) Func return
+
+	<Non-Block I/O 방식>
+	1) USERMODE : fprint (Call)
+	2) THREAD	: t1 - func return , t2 - I/O Request (pending)
+	3) Device Driver : I/O
+	4) H/W		: SSD/HDD
+	5) Kernel return
+	6) Thread return
+
+	블록킹 : 프로세스의 여러 상태 중에서 Running/Suspend/Block/Wait 등의 상태가 있잖아? 그 중의 Block 상태처럼 다른 요청이 들어오기 전까지 대기 하는 것을 의미.
+	논블록킹 : Block 상태에 있지 않고 다른 작업을 처리하기 위하여 커널에 요청만 해둔 채로 해당 함수/메소드 등이 Return.
+

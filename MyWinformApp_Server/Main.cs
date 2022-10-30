@@ -6,6 +6,7 @@ using System.Drawing;
 using System.Linq;
 using System.Text;
 using System.Threading;
+using System.Threading.Tasks;
 using System.Windows.Forms;
 using System.Net;
 using System.Net.Sockets;
@@ -19,7 +20,7 @@ namespace MyWinformApp_Server
         #region ClassVariables
         const int portNumber = 8000;
 
-        const string dbName = "logs";
+        const string dbName = "chatlog";
         const string dbTable = "chat";
 
         private int userCount = 0;
@@ -37,9 +38,13 @@ namespace MyWinformApp_Server
         TcpListener server = null;
         TcpClient clientSocket = null;
 
+        HttpListener httpListener;
+
         connectDB db;
 
         DateTime time = DateTime.Today;
+
+        
         #endregion
 
         public Main()
@@ -54,6 +59,10 @@ namespace MyWinformApp_Server
             thread_UIController.IsBackground = true;
             thread_UIController.Start();
 
+            Thread httpThread = new Thread(serverInit);
+            httpThread.IsBackground = true;
+            httpThread.Start();
+
             Thread timerThread = new Thread(Timer);
             timerThread.IsBackground = true;
             timerThread.Start();
@@ -64,6 +73,50 @@ namespace MyWinformApp_Server
             db = new connectDB();
             db.Open();
         }
+
+        #region HTTP
+        public void serverInit()
+        {
+            if (httpListener == null)
+            {
+                httpListener = new HttpListener();
+                httpListener.Prefixes.Add(string.Format("http://+:8686/"));
+                serverStart();
+            }
+        }
+
+        public void serverStart()
+        {
+            httpListener.Start();
+
+            Task.Factory.StartNew(() =>
+            {
+                while (httpListener != null)
+                {
+                    HttpListenerContext context = this.httpListener.GetContext();
+
+                    string rawurl = context.Request.RawUrl;
+                    string httpmethod = context.Request.HttpMethod;
+
+                    string result = "";
+
+                    result += string.Format("httpmethod = {0}\r\n", httpmethod);
+                    result += string.Format("rawurl = {0}\r\n", rawurl);
+
+                    if (richTextBox1.InvokeRequired)
+                    {
+                        richTextBox1.Invoke(new MethodInvoker(delegate { richTextBox1.Text += result; }));
+                    }
+                    else
+                    {
+                        richTextBox1.Text += result;
+                    }
+
+                    context.Response.Close();
+                }
+            });
+        }
+        #endregion
 
         #region TimerThread
         private void Timer()

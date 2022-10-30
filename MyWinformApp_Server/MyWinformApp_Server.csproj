@@ -137,6 +137,7 @@
     <None Include="App.config" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="Study_Block_Non-Block.txt" />
     <Content Include="Stduy_AboutThread.txt" />
     <Content Include="CleanCode.txt" />
     <Content Include="Study_DB_Connection_log.txt" />

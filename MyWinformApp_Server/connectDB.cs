@@ -11,7 +11,7 @@ namespace MyWinformApp_Server
 {
     class connectDB
     {
-        const string dbName = "chatlog";
+        const string dbName = "chatlogs";
         const string tableName = "chatlog";
 
         const string connectionString = "Server=localhost;Database=" + dbName + ";Uid=root;Pwd=qwe123!@#;";
