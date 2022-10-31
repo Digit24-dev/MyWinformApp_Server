@@ -1,35 +1,24 @@
-﻿using Newtonsoft.Json;
-using Newtonsoft.Json.Serialization;
-using System;
+﻿using System;
 using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Drawing;
-using System.Linq;
 using System.Text;
 using System.Threading;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 using System.Net;
 using System.Net.Sockets;
 using MySql.Data.MySqlClient;
+using System.Text.Json;
+using System.Text.Json.Serialization;
 
 namespace MyWinformApp_Server
 {
-    public class DataFormat
-    {
-        public DateTimeOffset Date { get; set; }
-        public string user { get; set; }
-        public string message { get; set; }
-    }
     public partial class Main : Form
     {
         #region ClassVariables
         const int portNumber = 8000;
 
-        const string dbName = "chatlog";
+        const string dbName = "logs";
         const string dbTable = "chat";
-        
+
         private int userCount = 0;
         private string date;
 
@@ -45,14 +34,21 @@ namespace MyWinformApp_Server
         TcpListener server = null;
         TcpClient clientSocket = null;
 
-        HttpListener httpListener;
-
         connectDB db;
 
         DateTime time = DateTime.Today;
 
-        string jsonString = JsonSerializer.Create;
+        string jsonData;
+        
         #endregion
+
+        public class JSON_Data
+        {
+            public DateTime time { get; set; }
+            public string user { get; set; }
+            public string message { get; set; }
+        }
+        
 
         public Main()
         {
@@ -66,13 +62,18 @@ namespace MyWinformApp_Server
             thread_UIController.IsBackground = true;
             thread_UIController.Start();
 
-            Thread httpThread = new Thread(serverInit);
-            httpThread.IsBackground = true;
-            httpThread.Start();
-
             Thread timerThread = new Thread(Timer);
             timerThread.IsBackground = true;
             timerThread.Start();
+
+            var serializedData = new JSON_Data
+            {
+                time = DateTime.Now,
+                user = "Hi",
+                message = "Hello."
+            };
+
+            jsonData = JsonSerializer.Serialize(serializedData);
         }
 
         private void Main_Load(object sender, EventArgs e)
@@ -80,50 +81,6 @@ namespace MyWinformApp_Server
             db = new connectDB();
             db.Open();
         }
-
-        #region HTTP
-        public void serverInit()
-        {
-            if (httpListener == null)
-            {
-                httpListener = new HttpListener();
-                httpListener.Prefixes.Add(string.Format("http://+:8686/"));
-                serverStart();
-            }
-        }
-
-        public void serverStart()
-        {
-            httpListener.Start();
-
-            Task.Factory.StartNew(() =>
-            {
-                while (httpListener != null)
-                {
-                    HttpListenerContext context = this.httpListener.GetContext();
-
-                    string rawurl = context.Request.RawUrl;
-                    string httpmethod = context.Request.HttpMethod;
-
-                    string result = "";
-
-                    result += string.Format("httpmethod = {0}\r\n", httpmethod);
-                    result += string.Format("rawurl = {0}\r\n", rawurl);
-
-                    if (richTextBox1.InvokeRequired)
-                    {
-                        richTextBox1.Invoke(new MethodInvoker(delegate { richTextBox1.Text += result; }));
-                    }
-                    else
-                    {
-                        richTextBox1.Text += result;
-                    }
-
-                    context.Response.Close();
-                }
-            });
-        }
-        #endregion
 
         #region TimerThread
         private void Timer()
@@ -150,28 +107,20 @@ namespace MyWinformApp_Server
 
             displayText(" >> Server Started.");
 
-            // 서버 메인 스레드
             while (true)
             {
                 try
                 {
-                    // 클라이언트 소켓  열기
                     clientSocket = server.AcceptTcpClient();
                     displayText(">> Connection Accepted");
 
-                    // 네트워크 스트림
                     NetworkStream stream = clientSocket.GetStream();
                     byte[] buffer = new byte[1024];
                     int bytes = stream.Read(buffer, 0, buffer.Length);
-                    
-                    // 유저 이름 받아오기
                     string user_name = Encoding.Unicode.GetString(buffer, 0, bytes);
                     user_name = user_name.Substring(0, user_name.IndexOf("$"));
-
-                    // 클라이언트 딕셔너리에 추가
                     clientList.Add(clientSocket, user_name);
 
-                    // Winform UI Invoke
                     if (this.InvokeRequired)
                     {
                         this.Invoke(new MethodInvoker(delegate ()
@@ -187,11 +136,11 @@ namespace MyWinformApp_Server
                     onReceiveFlag_Join = true;
                     sendListOfUsers(user_name);
 
-                    // 클라리언트
                     handleClient h_client = new handleClient();
                     h_client.OnReceived += new handleClient.MessageDisplayHandler(onReceived);
                     h_client.OnDisconnected += new handleClient.DisconnectedHandler(OnDisconnected);
                     h_client.startClient(clientSocket, clientList);
+
                 }
                 catch (SocketException es)
                 {
@@ -306,7 +255,6 @@ namespace MyWinformApp_Server
                     else
                     {
                         buffer = Encoding.Unicode.GetBytes("[" + date + "]" + user_name + " : " + message);
-                        
                     }
                 }
                 else
@@ -401,13 +349,6 @@ namespace MyWinformApp_Server
             {
                 MessageBox.Show("DB 가 제대로 닫히지 않았습니다.");
             }
-        }
-        #endregion
-
-        #region Method
-        private void dataInject()
-        {
-
         }
         #endregion
 
