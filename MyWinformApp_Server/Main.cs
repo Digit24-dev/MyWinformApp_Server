@@ -66,14 +66,6 @@ namespace MyWinformApp_Server
             timerThread.IsBackground = true;
             timerThread.Start();
 
-            var serializedData = new JSON_Data
-            {
-                time = DateTime.Now,
-                user = "Hi",
-                message = "Hello."
-            };
-
-            jsonData = JsonSerializer.Serialize(serializedData);
         }
 
         private void Main_Load(object sender, EventArgs e)
@@ -354,7 +346,14 @@ namespace MyWinformApp_Server
 
         private void button1_Click(object sender, EventArgs e)
         {
+            var serializedData = new JSON_Data
+            {
+                time = DateTime.Now,
+                user = "Hi",
+                message = "Hello."
+            };
 
+            jsonData = JsonSerializer.Serialize(serializedData);
         }
     }
 }

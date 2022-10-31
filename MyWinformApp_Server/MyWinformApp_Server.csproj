@@ -118,7 +118,7 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="connectDB.cs" />
+    <Compile Include="ConnectDB.cs" />
     <Compile Include="handleClient.cs" />
     <Compile Include="IDataBase_Connection.cs" />
     <Compile Include="Main.cs">
