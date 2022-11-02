@@ -9,7 +9,7 @@ using MySql.Data.MySqlClient;
 
 namespace MyWinformApp_Server
 {
-    class connectDB
+    class ConnectDB
     {
         const string dbName = "chatlog";
         const string tableName = "chatlog";
@@ -20,7 +20,7 @@ namespace MyWinformApp_Server
         MySqlConnection connection = new MySqlConnection(connectionString);
         MySqlCommand cmd;
 
-        public connectDB()
+        public ConnectDB()
         {
             
         }

@@ -34,7 +34,7 @@ namespace MyWinformApp_Server
         TcpListener server = null;
         TcpClient clientSocket = null;
 
-        connectDB db;
+        ConnectDB db;
 
         DateTime time = DateTime.Today;
 
@@ -44,11 +44,23 @@ namespace MyWinformApp_Server
 
         public class JSON_Data
         {
-            public DateTime time { get; set; }
+            public string time { get; set; }
             public string user { get; set; }
             public string message { get; set; }
         }
         
+        private void JsonParser(string date, string user, string message)
+        {
+            var serializedData = new JSON_Data
+            {
+                time = date,
+                user = user,
+                message = message
+            };
+
+            jsonData = JsonSerializer.Serialize(serializedData);
+            //displayText(jsonData); // 동작 완료.
+        }
 
         public Main()
         {
@@ -70,7 +82,7 @@ namespace MyWinformApp_Server
 
         private void Main_Load(object sender, EventArgs e)
         {
-            db = new connectDB();
+            db = new ConnectDB();
             db.Open();
         }
 
@@ -247,6 +259,7 @@ namespace MyWinformApp_Server
                     else
                     {
                         buffer = Encoding.Unicode.GetBytes("[" + date + "]" + user_name + " : " + message);
+                        JsonParser(date, user_name, message);
                     }
                 }
                 else
@@ -346,14 +359,7 @@ namespace MyWinformApp_Server
 
         private void button1_Click(object sender, EventArgs e)
         {
-            var serializedData = new JSON_Data
-            {
-                time = DateTime.Now,
-                user = "Hi",
-                message = "Hello."
-            };
-
-            jsonData = JsonSerializer.Serialize(serializedData);
+            
         }
     }
 }
