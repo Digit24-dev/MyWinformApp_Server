@@ -37,8 +37,6 @@ namespace MyWinformApp_Server
         ConnectDB db;
 
         DateTime time = DateTime.Today;
-
-        string jsonData;
         
         #endregion
 
@@ -49,7 +47,7 @@ namespace MyWinformApp_Server
             public string message { get; set; }
         }
         
-        private void JsonParser(string date, string user, string message)
+        private string JsonParser(string date, string user, string message)
         {
             var serializedData = new JSON_Data
             {
@@ -58,8 +56,18 @@ namespace MyWinformApp_Server
                 message = message
             };
 
-            jsonData = JsonSerializer.Serialize(serializedData);
+            return JsonSerializer.Serialize(serializedData);
+
+
+
             //displayText(jsonData); // 동작 완료.
+        }
+
+        private void JsonDeparser(string jsonData)
+        {
+            var deSerializedData = new JSON_Data { };
+            
+            deSerializedData = JsonSerializer.Deserialize<JSON_Data>(jsonData);
         }
 
         public Main()
@@ -259,7 +267,7 @@ namespace MyWinformApp_Server
                     else
                     {
                         buffer = Encoding.Unicode.GetBytes("[" + date + "]" + user_name + " : " + message);
-                        JsonParser(date, user_name, message);
+                        displayText(JsonParser(date, user_name, message));
                     }
                 }
                 else
@@ -359,7 +367,7 @@ namespace MyWinformApp_Server
 
         private void button1_Click(object sender, EventArgs e)
         {
-            
+            // JsonDeparser(); // test
         }
     }
 }
