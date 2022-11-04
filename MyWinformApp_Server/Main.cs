@@ -58,8 +58,6 @@ namespace MyWinformApp_Server
 
             return JsonSerializer.Serialize(serializedData);
 
-
-
             //displayText(jsonData); // 동작 완료.
         }
 
