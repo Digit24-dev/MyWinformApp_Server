@@ -52,4 +52,7 @@
   https://m.blog.naver.com/PostView.naver?isHttpsRedirect=true&blogId=zic6188610&logNo=221029988476
   참조
 
-  
+  22.11.05
+
+   하드코드된 ID 및 PW 보안 해결 방안 찾기.
+   -> 특정 방식으로 암호화/복호화 하여 Rom에 저장?

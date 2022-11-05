@@ -22,9 +22,8 @@ namespace MyWinformApp_Server
         private int userCount = 0;
         private string date;
 
-        private object threadLock = new object();
-
-        Queue<string> userToRemove = new Queue<string>();
+        private readonly object threadLock = new object();
+        private Queue<string> userToRemove = new Queue<string>();
 
         bool onReceiveFlag_Exit = false;
         bool onReceiveFlag_Join = false;
@@ -35,25 +34,24 @@ namespace MyWinformApp_Server
         TcpClient clientSocket = null;
 
         ConnectDB db;
-
-        DateTime time = DateTime.Today;
+        private DateTime time = DateTime.Today;
         
         #endregion
 
         public class JSON_Data
         {
-            public string time { get; set; }
-            public string user { get; set; }
-            public string message { get; set; }
+            public string Time { get; set; }
+            public string User { get; set; }
+            public string Message { get; set; }
         }
         
         private string JsonParser(string date, string user, string message)
         {
             var serializedData = new JSON_Data
             {
-                time = date,
-                user = user,
-                message = message
+                Time = date,
+                User = user,
+                Message = message
             };
 
             return JsonSerializer.Serialize(serializedData);
@@ -61,27 +59,35 @@ namespace MyWinformApp_Server
             //displayText(jsonData); // 동작 완료.
         }
 
-        private void JsonDeparser(string jsonData)
+        private JSON_Data JsonDeparser(string jsonData)
         {
-            var deSerializedData = new JSON_Data { };
+            JSON_Data deSerializedData;
             
             deSerializedData = JsonSerializer.Deserialize<JSON_Data>(jsonData);
+
+            return deSerializedData;
         }
 
         public Main()
         {
             InitializeComponent();
-            
-            Thread thread = new Thread(InitSocket);
-            thread.IsBackground = true;
+
+            Thread thread = new Thread(InitSocket)
+            {
+                IsBackground = true
+            };
             thread.Start();
 
-            Thread thread_UIController = new Thread(onReceived_UIController);
-            thread_UIController.IsBackground = true;
+            Thread thread_UIController = new Thread(OnReceived_UIController)
+            {
+                IsBackground = true
+            };
             thread_UIController.Start();
 
-            Thread timerThread = new Thread(Timer);
-            timerThread.IsBackground = true;
+            Thread timerThread = new Thread(Timer)
+            {
+                IsBackground = true
+            };
             timerThread.Start();
 
         }
@@ -112,17 +118,17 @@ namespace MyWinformApp_Server
         private void InitSocket()
         {
             server = new TcpListener(IPAddress.Any, portNumber);
-            clientSocket = default(TcpClient);
+            clientSocket = default;
             server.Start();
 
-            displayText(" >> Server Started.");
+            DisplayText(" >> Server Started.");
 
             while (true)
             {
                 try
                 {
                     clientSocket = server.AcceptTcpClient();
-                    displayText(">> Connection Accepted");
+                    DisplayText(">> Connection Accepted");
 
                     NetworkStream stream = clientSocket.GetStream();
                     byte[] buffer = new byte[1024];
@@ -144,22 +150,22 @@ namespace MyWinformApp_Server
 
                     // Async UserList Update.
                     onReceiveFlag_Join = true;
-                    sendListOfUsers(user_name);
+                    SendListOfUsers(user_name);
 
                     handleClient h_client = new handleClient();
-                    h_client.OnReceived += new handleClient.MessageDisplayHandler(onReceived);
+                    h_client.OnReceived += new handleClient.MessageDisplayHandler(OnReceived);
                     h_client.OnDisconnected += new handleClient.DisconnectedHandler(OnDisconnected);
                     h_client.startClient(clientSocket, clientList);
 
                 }
                 catch (SocketException es)
                 {
-                    MessageBox.Show("es!");
+                    MessageBox.Show(es.Message);
                     break;
                 }
                 catch (Exception ex)
                 {
-                    displayText(ex.Message);
+                    DisplayText(ex.Message);
                     MessageBox.Show("ex!");
                     break;
                 }
@@ -180,7 +186,7 @@ namespace MyWinformApp_Server
         /// 그 밖에 UI 컨트롤을 전체적으로 담당하는 역할.
         /// </summary>
         /// <param name="user_name"></param>
-        private void onReceived_UIController()
+        private void OnReceived_UIController()
         {
             while (true)
             {
@@ -218,7 +224,7 @@ namespace MyWinformApp_Server
             }
         }
 
-        private void onReceived(string message, string user_name)
+        private void OnReceived(string message, string user_name)
         {
             // 스레드 프로세스가 너무 길음. 컨트롤 내부로 Invoke 필요.
             if (message.Equals("/exit"))
@@ -228,25 +234,25 @@ namespace MyWinformApp_Server
                 // Thread Synchronization
                 lock (threadLock)
                 {
-                    userCount = userCount - 1;
+                    userCount--;
                     userToRemove.Enqueue(user_name);
                     onReceiveFlag_Exit = true;
                 }
 
                 // Async UserList Update.
-                displayText(DisplayMessage); // 이 구문이 스레드 성능에 영향을 주는 것이 아닌지 검토 필요.
-                sendMessagetoAll(DisplayMessage, user_name, true);
+                DisplayText(DisplayMessage); // 이 구문이 스레드 성능에 영향을 주는 것이 아닌지 검토 필요.
+                SendMessageToAll(DisplayMessage, user_name, true);
             }
             else
             {
                 date = DateTime.Now.ToString("MM월dd일 HH:mm:ss");
                 string DisplayMessage = "[" + date + "]" + user_name + " : " + message;
-                displayText(DisplayMessage);
-                sendMessagetoAll(message, user_name, true);
+                DisplayText(DisplayMessage);
+                SendMessageToAll(message, user_name, true);
             }
         }
 
-        private void sendMessagetoAll(string message, string user_name, bool flag)
+        private void SendMessageToAll(string message, string user_name, bool flag)
         {
             foreach (var pair in clientList)
             {
@@ -254,18 +260,21 @@ namespace MyWinformApp_Server
 
                 TcpClient client = pair.Key as TcpClient;
                 NetworkStream stream = client.GetStream();
-                byte[] buffer = null;
+                byte[] buffer;
 
                 if (flag)
                 {
                     if (message.Equals("/exit"))
                     {
                         buffer = Encoding.Unicode.GetBytes("[" + date + "]" + user_name + " leaves the chat.");
+                        
+                        db.SetData("insert into " + dbName + "values(" + time + user_name + message + ")");
                     }
                     else
                     {
                         buffer = Encoding.Unicode.GetBytes("[" + date + "]" + user_name + " : " + message);
-                        displayText(JsonParser(date, user_name, message));
+
+                        db.SetData("insert into " + dbName + "values(" + time + user_name + message + ")");
                     }
                 }
                 else
@@ -282,7 +291,7 @@ namespace MyWinformApp_Server
         /// 모든 유저에게 현재 접속 중인 유저 리스트를 문자열로 전송하는 메소드입니다. 문자열은 '$'로 구분되어 전송됩니다.
         /// </summary>
         /// <param name="user_name"></param>
-        private void sendListOfUsers(string user_name)
+        private void SendListOfUsers(string user_name)
         {
             string userList = "";
 
@@ -301,13 +310,13 @@ namespace MyWinformApp_Server
 
                 stream.Write(buffer, 0, buffer.Length);
                 stream.Flush();
-                displayText(userList);
+                DisplayText(userList);
             }
         }
         #endregion
 
         #region WinformControl
-        public void displayText(string text)
+        public void DisplayText(string text)
         {
             if (richTextBox1.InvokeRequired)
             {
@@ -344,7 +353,7 @@ namespace MyWinformApp_Server
 
         private void TextBox_Status_KeyUp(object sender, KeyEventArgs e)
         {
-            sendMessagetoAll("ping", "", true);
+            SendMessageToAll("ping", "", true);
         }
 
         private void Main_FormClosing(object sender, FormClosingEventArgs e)
@@ -363,7 +372,7 @@ namespace MyWinformApp_Server
         }
         #endregion
 
-        private void button1_Click(object sender, EventArgs e)
+        private void Button1_Click(object sender, EventArgs e)
         {
             // JsonDeparser(); // test
         }

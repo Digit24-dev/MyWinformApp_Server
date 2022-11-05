@@ -12,12 +12,12 @@ namespace MyWinformApp_Server
     class ConnectDB
     {
         const string dbName = "chatlog";
-        const string tableName = "chatlog";
+        //const string tableName = "chatlog";
 
         const string connectionString = "Server=localhost;Database=" + dbName + ";Uid=root;Pwd=qwe123!@#;";
 
         public SqlConnection conn;
-        MySqlConnection connection = new MySqlConnection(connectionString);
+        private readonly MySqlConnection connection = new MySqlConnection(connectionString);
         MySqlCommand cmd;
 
         public ConnectDB()
@@ -27,19 +27,12 @@ namespace MyWinformApp_Server
 
         public void Open()
         {
-
             try
             {
-                if(conn == null)
-                {
-                    //conn = new SqlConnection(connString);
-                    //conn.Open();
-                    connection.Open();
-                }
+                connection.Open();
             }
             catch (Exception ex)
             {
-                //conn.Close();
                 Console.WriteLine(ex.Message);
                 throw ex;
             }
@@ -49,9 +42,9 @@ namespace MyWinformApp_Server
         {
             try
             {
-                if(conn != null)
+                if(connection != null)
                 {
-                    conn.Close();
+                    connection.Close();
                 }
             }
             catch (Exception ex)
@@ -62,7 +55,7 @@ namespace MyWinformApp_Server
 
          public bool IsOpen()
         {
-            if (conn != null)   return true;
+            if (connection != null)   return true;
             return false;
         }
 
@@ -98,14 +91,6 @@ namespace MyWinformApp_Server
         /// Postgresql DB 연동 찾아보기
         /// - Nuget 패키지 관리 > 찾아보기 탭 MySql.Data 설치
         /// 출처 : https://dodo1054.tistory.com/114
-        /// </summary>
-        /// <param name="strSql"></param>
-        /// <returns></returns>
-        public int fn_ExecuteNonQuery(string[] strSql) 
-        {
-            
-            return 0;
-        }
-
+        
     }
 }
