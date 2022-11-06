@@ -12,7 +12,7 @@ namespace MyWinformApp_Server
     {
         HttpListener httpListener;
 
-        public void serverInit()
+        public void ServerInit()
         {
             if(httpListener == null)
             {
@@ -23,11 +23,11 @@ namespace MyWinformApp_Server
                 // 모든 IP : 127.0.0.1, localhost, 외부 IP, 내부 IP...
                 // 즉, httpListener의 프리픽스를 현재 IP 뒤에 :8686이라고 붙은걸로 하겠다. 라는 의미.
                 httpListener.Prefixes.Add(string.Format("http://+:8686/"));
-                serverStart();
+                ServerStart();
             }
         }
 
-        private void serverStart()
+        private void ServerStart()
         {
             if (!httpListener.IsListening)
             {
@@ -50,6 +50,7 @@ namespace MyWinformApp_Server
 
                         // display result
 
+                        context.Response.Close();
                     }
                 });
             }

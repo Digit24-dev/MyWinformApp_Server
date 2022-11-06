@@ -85,7 +85,7 @@ namespace MyWinformApp_Server
             thread_UIController.Start();
 
             httpConnect = new HttpConnect();
-            httpConnect.serverInit();
+            httpConnect.ServerInit();
 
 /*            Thread timerThread = new Thread(Timer)
             {
