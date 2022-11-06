@@ -118,9 +118,9 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="ConnectDB.cs" />
     <Compile Include="DAO.cs" />
     <Compile Include="handleClient.cs" />
+    <Compile Include="HttpConnect.cs" />
     <Compile Include="IDataBase_Connection.cs" />
     <Compile Include="Main.cs">
       <SubType>Form</SubType>

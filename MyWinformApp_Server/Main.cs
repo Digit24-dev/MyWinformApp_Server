@@ -16,8 +16,8 @@ namespace MyWinformApp_Server
         #region ClassVariables
         const int portNumber = 8000;
 
-        const string dbName = "logs";
-        const string dbTable = "chat";
+        const string tableName = DAO.tableName;
+        //const string dbTable = "chat";
 
         private int userCount = 0;
         private string date;
@@ -33,9 +33,9 @@ namespace MyWinformApp_Server
         TcpListener server = null;
         TcpClient clientSocket = null;
 
-        ConnectDB db;
-        private DateTime time = DateTime.Today;
-        
+        DAO userDAO;
+
+        HttpConnect httpConnect;
         #endregion
 
         public class JSON_Data
@@ -84,18 +84,21 @@ namespace MyWinformApp_Server
             };
             thread_UIController.Start();
 
-            Thread timerThread = new Thread(Timer)
+            httpConnect = new HttpConnect();
+            httpConnect.serverInit();
+
+/*            Thread timerThread = new Thread(Timer)
             {
                 IsBackground = true
             };
-            timerThread.Start();
+            timerThread.Start();*/
 
         }
 
         private void Main_Load(object sender, EventArgs e)
         {
-            db = new ConnectDB();
-            db.Open();
+            userDAO = new DAO();
+            userDAO.Open();
         }
 
         #region TimerThread
@@ -260,6 +263,8 @@ namespace MyWinformApp_Server
 
                 TcpClient client = pair.Key as TcpClient;
                 NetworkStream stream = client.GetStream();
+                DAO userDAO = new DAO();
+
                 byte[] buffer;
 
                 if (flag)
@@ -268,13 +273,13 @@ namespace MyWinformApp_Server
                     {
                         buffer = Encoding.Unicode.GetBytes("[" + date + "]" + user_name + " leaves the chat.");
                         
-                        db.SetData("insert into " + dbName + "values(" + time + user_name + message + ")");
+                        this.userDAO.SetData("insert into " + tableName + "values(" + date + user_name + message + ")");
                     }
                     else
                     {
                         buffer = Encoding.Unicode.GetBytes("[" + date + "]" + user_name + " : " + message);
-
-                        db.SetData("insert into " + dbName + "values(" + time + user_name + message + ")");
+                        userDAO.DataParser(date, user_name, message);
+                        //db.SetData("insert into " + dbName + "values(" + time + user_name + message + ")");
                     }
                 }
                 else
@@ -339,14 +344,14 @@ namespace MyWinformApp_Server
 
         private void Button_Stop_Click(object sender, EventArgs e)
         {
-            String temp = db.GetDataSet("select * from " + dbName + ";");
+            String temp = userDAO.GetDataSet("select * from " + tableName + ";");
             richTextBox1.AppendText("from Database! >> " + temp + Environment.NewLine);
         }
 
         private void Button_Exit_Click(object sender, EventArgs e)
         {
             // 데이터 베이스에 저장.
-            db.Close();
+            userDAO.Close();
             server.Stop();
             this.Close();
         }
@@ -360,9 +365,9 @@ namespace MyWinformApp_Server
         {
             try
             {
-                if (db.IsOpen())
+                if (userDAO.IsOpen())
                 {
-                    db.Close();
+                    userDAO.Close();
                 }
             }
             catch (Exception)
