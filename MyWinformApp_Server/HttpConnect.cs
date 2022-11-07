@@ -38,7 +38,7 @@ namespace MyWinformApp_Server
                 {
                     while (httpListener != null)
                     {
-                        HttpListenerContext context = this.httpListener.GetContext();
+                        HttpListenerContext context = httpListener.GetContext();
 
                         string rawurl = context.Request.RawUrl;
                         string httpMethod = context.Request.HttpMethod;

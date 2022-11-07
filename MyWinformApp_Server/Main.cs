@@ -72,27 +72,28 @@ namespace MyWinformApp_Server
         {
             InitializeComponent();
 
+            // Scoket Thread
             Thread thread = new Thread(InitSocket)
             {
                 IsBackground = true
             };
             thread.Start();
 
+            // Controller Thread
             Thread thread_UIController = new Thread(OnReceived_UIController)
             {
                 IsBackground = true
             };
             thread_UIController.Start();
 
+            // HTTP Thread
             httpConnect = new HttpConnect();
             httpConnect.ServerInit();
-
-/*            Thread timerThread = new Thread(Timer)
+/*            Thread httpThread = new Thread(httpConnect.ServerInit)
             {
                 IsBackground = true
             };
-            timerThread.Start();*/
-
+            httpThread.Start();*/
         }
 
         private void Main_Load(object sender, EventArgs e)
@@ -100,17 +101,6 @@ namespace MyWinformApp_Server
             userDAO = new DAO();
             userDAO.Open();
         }
-
-        #region TimerThread
-        private void Timer()
-        {
-            // Save logs when this thread invoked.
-            //db.SetData("insert into " + dbTable + "values()");
-            
-            // 데이터 나누는 것이 우선인 듯.
-            Thread.Sleep(1000);
-        }
-        #endregion
 
         #region NetworkConnection
 

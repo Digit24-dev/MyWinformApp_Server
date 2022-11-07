@@ -45,3 +45,8 @@ Critical Section [임계영역]
 
   - await 연산자
 
+
+
+  Thread vs Task
+
+  Task 공부.
