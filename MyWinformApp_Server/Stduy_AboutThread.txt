@@ -47,6 +47,36 @@ Critical Section [임계영역]
 
 
 
-  Thread vs Task
 
-  Task 공부.
+
+
+	[dynamic 형식]
+
+	dynamic 형식도 int, string과 같은 하나의 데이터 형식.
+	하지만 int와 string은 컴파일 시간에 형식 검사를 하는 것과 달리 dynamic 형식은 런타임 중에 형식 검사를 진행한다.
+
+	[Ex]
+	{
+		dynamic[] arr = new dynamic[]{new Duck(), new Mallard(), new Robot()};
+		
+		foreach(dynamic duck in arr)
+		{
+			Console.WriteLine(duck.GetType());
+			duck.Walk();
+			duck.Swim();
+			duck.Quack();
+		}
+	}
+	
+	각각의 클래스가 Walk(), Swim(), Quack() 메소드를 구현하고 있으므로 위 코드는 컴파일, 실행 모두 문제 없다.
+
+
+	[COM과 .NET 사이의 상호 운용성을 위한 dynamic 형식]
+
+	-COM 이란? 
+	 Component Object Model 의 약자로, MS의 소프트웨어 컴포넌트 규격을 말한다.
+	 OLE, ActiveX, COM+와 같은 파생 규격들이 모두 COM을 바탕으로 만들어 졌다.
+
+
+	Thread vs Task
+
