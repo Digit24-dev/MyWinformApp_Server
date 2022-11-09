@@ -1,56 +1,5 @@
 ﻿
-Critical Section [임계영역]
-
-임계영역 응용
-
-	- lock 키워드 사용
-
-	 매개변수로 사용하는 객체는 참조형이면 어느 것이든 쓸 수 있으나, Public 키워드 등을 통해 외부 코드에서도 접근할 수 있는 세가지는 사용하지 말것.
-
-	 1. this		: 클래스의 인스턴스는 내부뿐 아니라 외부에서도 자주 사용된다.(?)
-	 2. Type형식	: typeof연산자나 object 클래스로부터 물려받은 GetType() 메소드는 type형식의 인스턴스를 반환한다. 즉, 코드의 어느 곳에서나 특정 형식에 대한 Type 객체를 얻을 수 있다.
-	 3. String 형식	: 절대로 string 객체로 lock 하지 말것. "abc"는 어떤 코드에서든 얻어낼 수 있는 string 객체이다.
-
-	 lock(object) // -> 여기에 참조로 사용될 객체를 자주 쓰이는 객체로 사용하지 말라는 뜻.
-	 {
-		
-	 }
-
-	 - Monitor 클래스
-
-
-
-
-
-
-
-	 [ 비동기 코드 방식 ]
-
-  - async 한정자
-  
-   메소드, 이벤트 처리기, 태스크, 람다식 등을 수식함으로써 C# 컴파일러가 이들을 호출하는 코드를 만날 때 호출 결과를 기다리지 않고 다음 코드로 이동하도록 실행 코드를 생성.
-   메소드/이벤트 처리기를 선언할 때 한정자들과 함께 사용.
-
-   public static async Task MyMethodAsync()
-   {
-   
-   }
-  
-  async 한정자로 된 메소드는 반환형식이 Task 혹은 Task<TResult> 또는 void 이어야 한다.
-
-  1. async로 한정한 void 형식 메소드는 await 연산자가 없어도 비동기로 실행된다.
-  2. async로 한정한 Task 또는 Task<TResult>를 반환하는 메소드/태스크/람다식은 await 연산자를 만나는 곳에서 호출자에게 제어를 돌려주며, await 연산자가 없는 경우 동기로 실행된다.
-
-
-
-  - await 연산자
-
-
-
-
-
-
-	[dynamic 형식]
+	[ dynamic 형식 ]
 
 	dynamic 형식도 int, string과 같은 하나의 데이터 형식.
 	하지만 int와 string은 컴파일 시간에 형식 검사를 하는 것과 달리 dynamic 형식은 런타임 중에 형식 검사를 진행한다.
@@ -78,5 +27,205 @@ Critical Section [임계영역]
 	 OLE, ActiveX, COM+와 같은 파생 규격들이 모두 COM을 바탕으로 만들어 졌다.
 
 
-	Thread vs Task
+	
+	
+	[ 스레드 ]
+
+	  - 대화형 콘솔에서 멀티 스레드를 사용하면 응답성을 높일 수 있다.
+	  - 멀티 프로세스 방식에 비해  멀티 스레드 방식이 자원 공유가 쉽다.
+	     멀티 프로세스 방식은 GUI가 없는 웹 서버 같은 서버용 애플리케이션에서 많이 사용하는데, 프로세스간 데이터 공유를 위해서는 소켓이나 공유 메모리 같은 IPC를 사용해야 한다.
+
+		 프로세스A					프로세스 B
+					  IPC request
+		 Data		<------------>	Data
+					  IPC response
+	  
+	  - "경제성" : 프로세스를 띄우기 위해 메모리와 자원을 할당하는 작업은 비용이 바싸다. 스레드를 띄울 때는 이미 프로세스에 할당된 메모리와 자원을 그대로 사용하므로 메모리와 자원을 할당하는 비용을 지불하지 않아도 된다.
+	  - 프로그램 구현이 까다롭다.
+	  - 테스트가 쉽지 않다.
+	  - 스레드 하나에 문제가 생기면 전체 프로세스가 영향을 받는다.
+	  - CPU의 자원할당을 위해서는 Context Switching을 많이 사용하는데, 이는 많은 비용을 소모한다.
+
+	1.1 스레드 시작하기
+	  1) Thread 인스턴스 생성, 매개변수로 스레드가 실행할 메소드 전달.
+	  2) Thread.Start() 메소드로 시작
+	  3) Thread.Join() 메소드로 스레드가 끝날 때까지 대기
+		-> Thread.Join() 메소드는 '블록 상태'에 들어가 있다가 매개변수로 전달한 메소드가 끝나게 되면 반환되어 다음 코드를 실행한다.
+
+	1.2 스레드 임의로 종료시키기
+	  
+	  - Abort() 메소드
+	    이 메소드를 실행 한다고 해서 즉시 멈춘다는 '보장'을 할 수 없다.
+		Thread 객체의 Abort() 메소드를 호출하면 CLR은 해당 스레드가 실행 중이던 코드에 'ThreadAbortException'을 호출한다.
+		이 때 이 예외를 catch하는 코드가 있으면 이 예외를 처리한 다음, finally 블록까지 실행한 후에야 해당 스레드는 완전히 종료된다.
+
+		(예시)
+		{
+			public void KeepAlive()
+			{
+				try{
+					while(count > 0){
+						Console.WriteLine($"{count--} left");
+						Thread.Sleep(10);
+					}
+					Console.WriteLine("Count : 0");
+				}
+				catch(ThreadAbortException e)
+				{
+					Console.WriteLine(e);
+				}
+				finally
+				{
+					Console.WriteLine("Clearing resource...");
+				}
+			}
+		}
+
+	1.3 스레드의 일생과 상태 변화
+
+	- ThreadState : 스레드의 상태를 나타내는 열거형
+	
+	  Unstarted		:	스레드 객체를 생성한 후 Thread.Start() 메소드가 호출되기 전의 상태
+	  Running		:	스레드가 시작하여 동작 중인 상태 / Unstarted 상태의 스레드를 Thread.Start() 메소드로 이 상태로 전환할 수 있다.
+	  Suspended		:	스레드의 일시 중단 상태. Thread.Suspend() 호출로 상태 전환되며 Thread.Resume()으로 Running 상태로 돌아간다.
+	  WaitSleepJoin	:	스레드가 블록된 상태 / Monitor.Enter(), Thread.Sleep(), Thread.Join()을 호출하면 이 상태가 된다.
+	  Aborted		:	스레드가 취소된 상태 / Aborted 상태가 된 스레드는 다시 Stopped 상태로 전환되어 완전히 중지된다.
+	  Stopped		:	중지된 상태의 스레드 / Abort() 메소드의 호출 혹은 메소드의 종료로 이 상태로 전환된다.
+	  Background	:	스레드가 백그라운드로 동작하고 있는 상태 / 포어그라운드 스레드는 하나라도 살아있는 한 프로세스가 죽지 않지만, 백그라운드는 몇개가 살아있든지 프로세스의 생애에 영향을 미치지 않는다. 하지만 프로세스가 죽으면 모든 백그라운드 스레드들도 죽는다.
+
+	  1.4 인터럽트
+
+	  Thread.Interrupt() 메소드는 스레드가 Running 상태를 피해 WaitJoinSleep 상태에 들어갔을 때에 ThreadInterruptedException 예외를 던져 스레드를 중지시킨다.
+
+	  *Interrupt vs Abort
+	  
+	  Interrupt												Abort
+	  WaitSleepJoin 상태 까지 기다렸다가 중지(잠복대기)		즉시 예외 투척(들이닥침 > 스레드가 어디까지 실행했는지 알 수 없다.)
+
+	1.5 스레드 간의 동기화
+
+	  
+	[ Critical Section, 임계영역 ]
+
+	  임계영역 응용
+
+	    - lock 키워드 사용
+
+		  매개변수로 사용하는 객체는 참조형이면 어느 것이든 쓸 수 있으나, Public 키워드 등을 통해 외부 코드에서도 접근할 수 있는 세가지는 사용하지 말것.
+
+		  1. this			: 클래스의 인스턴스는 내부뿐 아니라 외부에서도 자주 사용된다.(?)
+		  2. Type형식		: typeof연산자나 object 클래스로부터 물려받은 GetType() 메소드는 type형식의 인스턴스를 반환한다. 즉, 코드의 어느 곳에서나 특정 형식에 대한 Type 객체를 얻을 수 있다.
+		  3. String 형식	: 절대로 string 객체로 lock 하지 말것. "abc"는 어떤 코드에서든 얻어낼 수 있는 string 객체이다.
+
+		  lock(object) // -> 여기에 참조로 사용될 객체를 자주 쓰이는 객체로 사용하지 말라는 뜻.
+		  {
+		
+		  }
+
+		- Monitor 클래스
+
+		  스레드 동기화에 사용하는 몇 가지 정적 메소드를 제공한다.
+
+		  1) Monitor.Enter()	:	크리티컬 섹션을 만든다.		'{' 역할
+		  2) Monitor.Exit()		:	크리티컬 섹션을 제거한다.	'}' 역할
+
+		  (STM Cortex-M3 시리즈 코딩을 할때에 RTOS에 임계영역을 만들어 공유 메모리에 대한 보호를 할때와 비슷한 것 같다.)
+		  두 메소드는 lock 키워드와 완전히 똑같은 기능을 한다.
+
+		  (예시)
+		  {
+			~~~~
+			readonly object thisLock;
+			~~~
+			While (loopCount-- > 0)
+			{
+				Monitor.Enter(thisLock);
+				try{
+					Count++;
+				}
+				finally{
+					Monito.Exit(thisLock);
+				}
+				Thread.Sleep(1);
+			}
+		  }
+
+	[ Monitor.Wait(), Monitor.Pulse() 저수준 동기화 ]
+
+	  lock 키워드 보다 섬세한 멀티 스레드 간의 동기화를 가능하게 한다.
+	  반드시 lock 블록 안에서 호출해야한다.
+
+	  Wait() 메소드는 스레드를 WaitSleepJoin 상태로 만들고, 이 상태에 있는 스레드는 동기화를 위해 갖고 있던 lock을 내려 놓은 뒤 Waiting Queue에 입력되고, 다른 스레드가 락을 얻어 작업을 수행한다.
+	  작업을 수행하던 스레드가 일을 마친 뒤 Pulse() 메소드를 호출하면 CLR은 Waiting Queue의 가장 첫 요소 스레들르 꺼낸 뒤 Ready Queue에 입력시킨다.
+	  Ready Queue에 입력된 스레드는 입력된 차례에 따라 락을 얻어 Running 상태에 들어간다.(다시 작업을 수행함)
+
+	  *Thread.Sleep() 메소드도 WaitSleepJoin 상태로 만들기는 하지만, Monitor.Pulse() 메소드에 의하여 깨어날 수는 없다.(Waiting Queue에 들어가지도 않는다.) 다시 Running 상태로 돌아오기 위해선
+	  매개 변수로 입력된 시간이 경과되거나 인터럽트 예외(Interrupt() 메소드 호출)를 받아야 깨어난다.
+	  Monitor.Wait() 메소드는 Monitor.Pulse() 메소드가 호출되면 바로 깨어날 수 있다. 이 때문에 멀티 스레드 어플리케이션의 성능 향상을 위해서 Wait()과 Pulse()를 사용한다.
+
+	  (예시)
+	  {
+		lock (thisLock)
+		{
+			while(lockedCount == true)
+				Monitor.Wait(thisLock);
+
+			lockedCount = true;
+			count++;
+			lockedCount = false;
+
+			Monitor.Pulse(thisLock);
+		}
+	  }
+
+	  $ 임계영역 진입 후에 lockedCount == false 이므로 다음 코드를 실행, lockedCount = true; 할당하면서 이 영역 내에 있는 코드를 실행. 이와 동시에 다른 스레드 들은 Wait상태에 빠지게 된다.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+	 [ 비동기 코드 방식 ]
+
+	  - async 한정자
+  
+	   메소드, 이벤트 처리기, 태스크, 람다식 등을 수식함으로써 C# 컴파일러가 이들을 호출하는 코드를 만날 때 호출 결과를 기다리지 않고 다음 코드로 이동하도록 실행 코드를 생성.
+	   메소드/이벤트 처리기를 선언할 때 한정자들과 함께 사용.
+
+	   public static async Task MyMethodAsync()
+	   {
+   
+	   }
+  
+	  async 한정자로 된 메소드는 반환형식이 Task 혹은 Task<TResult> 또는 void 이어야 한다.
+
+	  1. async로 한정한 void 형식 메소드는 await 연산자가 없어도 비동기로 실행된다.
+	  2. async로 한정한 Task 또는 Task<TResult>를 반환하는 메소드/태스크/람다식은 await 연산자를 만나는 곳에서 호출자에게 제어를 돌려주며, await 연산자가 없는 경우 동기로 실행된다.
+
+
+
+	  - await 연산자
+
 
