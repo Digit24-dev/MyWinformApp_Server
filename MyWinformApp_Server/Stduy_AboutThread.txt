@@ -184,26 +184,79 @@
 
 
 
+	  2.1 System.Threading.Tasks.Task 클래스
+
+	    동기코드	: 동기 코드는 메소드를 호출한 뒤에 이 메소드의 실행이 완전히 종료되어야만 다음 메소드를 호출할 수 있다.
+		비동기 코드	: 비동기 코드는 메소드를 호출한 뒤에 이 메소드의 종료를 기다리지 않고 다음 코드를 실행한다.
+
+		[ Task ]
+
+		Task 클래스는 인스턴스를 생성할 때 Action 대리자를 넘겨 받는다. 반환형을 갖지 않는 메소드와 익명 메소드, 무명 메소드를 넘겨 받는다.
+
+		( 예시 )
+		{
+			Action someAction = () =>
+			{
+				Thread.Sleep(1000);
+				Console.WriteLine("Printed asynchronously.");
+			};
+
+			Task myTask = new Task(someAction);
+			myTask.Start();		// 생성자에 넘겨 받은 무명 함수를 비동기로 호출.
+
+			myTask.Wait();		// 비동기 호출이 완료될 때까지 기다린다.
+		}
+
+		*Task의 생성자는 여러 버전으로 오버로딩 되어 있으나, 앞의 코드에서 사용한 버전은 Action 대리자를 매개변수로 받는다.
+		이렇게 생성한 Task의 인스턴스는 Start() 메소드를 호출하여 생성자에서 넘겨 받은 Action 대리자를 비동기로 실행시킨다.
+		myTask.Wait() 메소드 호출부에 가서 myTask가 실행중인 비동기 코드가 완료될 때까지 기다린다.
+
+		- Task.Run()
+		
+		( 예시 )
+		{
+			var myTask = Task.Run( () =>
+			{
+				Trhead.Sleep(1000);
+				Console.WriteLine("Printed asynchronously.");
+			};
+			Console.WriteLine("Printed synchronously.");
+			myTask.Wait();
+		}
+		
+		Task의 생성자와 Start() 메소드를 따로 호출하든 Task.Run() 메소드르 이용해서 단번에 처리할 수도 있다.
+
+		ex) MainApp.cs // Page.646
 
 
 
+	  2.2 Task<Result> 클래스
+
+	  - 비동기 실행결과를 얻을 수 있게 해준다.
+	  - Task가 비동기로 수행할 코드를 Action 대리자로 받는 대신 Func 대리자로 받는다.
+	  - Wait()를 호출하는 습관을 들이자.
+
+		ex) Page. 649
+		foreach 로 여러 Task를 각각 Start 해준다.
 
 
 
+	  2.3 System.Threading.Tasks.Parallel 클래스
 
+	  ( 예시 )
+	  {
+		void SomeMethod( int i )
+		{
+			Console.WriteLine(i);
+		}
+		Parallel.For(0, 100, SomeMethod);
+	  }
 
+	  Parallel.For() 메소드가 메소드를 병렬로 호출하면서 0부터 100사이의 정수를 메소드의 매개 변수로 넘겨준다. Parallel 클래스는 호출된 메소드를 내부적으로 판단하여 최적화해서 실행하게 된다.
 
+		ex) Page. 652
 
-
-
-
-
-
-
-
-
-
-
+	  *비동기 코드 방식은 익숙하지 않으니, 예제를 한번씩 확인하자.
 
 
 
