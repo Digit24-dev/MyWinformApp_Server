@@ -163,6 +163,7 @@
     <Content Include="CleanCode.txt" />
     <Content Include="Study_DB_Connection_log.txt" />
     <Content Include="Study_UnitTest.txt" />
+    <Content Include="Study_AnalyzeWebServer.txt" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Import Project="..\packages\System.Text.Json.6.0.6\build\System.Text.Json.targets" Condition="Exists('..\packages\System.Text.Json.6.0.6\build\System.Text.Json.targets')" />

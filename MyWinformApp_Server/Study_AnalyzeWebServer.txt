@@ -1,0 +1,29 @@
+﻿
+
+	[ 코드 구조 ]
+
+	- MainForm					: Form 클래스
+	- ThreadParameter			: Thread 파라미터 전달
+	- WebServer					: 메인 웹 서버
+	- ActionRequestedEventArgs	: 이벤트 대리자 클래스
+
+	
+	[ActionRequestedEventArgs]
+
+	 Webserver의 이벤트 핸들러 대리자로 쓰인다. Context와 Server 객체를 전달한다.
+
+	[ThreadParameter]
+
+	 Parameter 전달로 사용됨
+
+	[WebServer]
+
+	 - 바인딩
+
+	  웹 서버를 구동하기 위해 주소를 바인딩 해야한다. 바인딩할 주소를 리스트에 저장한다.
+
+	 - Listen() 메소드
+
+	 WebServer가 열려 있으면, listener에서 Context를 얻어와 Thread를 생성하여 Response 메소드 실행.
+	 *일반적으로 스레드 객체를 생성하면 매개 변수를 넣을 수 없지만, ParamterizedThread 객체로 생성하여 Thread에 전달자로 전달할 수 있다.
+
