@@ -101,6 +101,7 @@
     <Reference Include="System.ValueTuple, Version=4.0.3.0, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
       <HintPath>..\packages\System.ValueTuple.4.5.0\lib\net47\System.ValueTuple.dll</HintPath>
     </Reference>
+    <Reference Include="System.Web" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="Microsoft.CSharp" />
@@ -128,6 +129,7 @@
     <Compile Include="Main.Designer.cs">
       <DependentUpon>Main.cs</DependentUpon>
     </Compile>
+    <Compile Include="MyModule1.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <EmbeddedResource Include="Main.resx">
@@ -162,6 +164,7 @@
     <Content Include="Stduy_AboutThread.txt" />
     <Content Include="CleanCode.txt" />
     <Content Include="Study_DB_Connection_log.txt" />
+    <Content Include="Study_DesignPattern.txt" />
     <Content Include="Study_UnitTest.txt" />
     <Content Include="Study_AnalyzeWebServer.txt" />
   </ItemGroup>
