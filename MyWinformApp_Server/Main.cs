@@ -88,12 +88,12 @@ namespace MyWinformApp_Server
 
             // HTTP Thread
             httpConnect = new HttpConnect();
-            httpConnect.ServerInit();
-/*            Thread httpThread = new Thread(httpConnect.ServerInit)
+            //httpConnect.ServerInit();
+            Thread httpThread = new Thread(httpConnect.ServerInit)
             {
                 IsBackground = true
             };
-            httpThread.Start();*/
+            httpThread.Start();
         }
 
         private void Main_Load(object sender, EventArgs e)
@@ -263,7 +263,7 @@ namespace MyWinformApp_Server
                     {
                         buffer = Encoding.Unicode.GetBytes("[" + date + "]" + user_name + " leaves the chat.");
                         
-                        this.userDAO.SetData("insert into " + tableName + "values(" + date + user_name + message + ")");
+                        //this.userDAO.SetData("insert into " + tableName + "values(" + date + user_name + message + ")");
                     }
                     else
                     {

@@ -10,12 +10,6 @@ using System.Text.Json;
 
 namespace MyWinformApp_Server
 {
-    public class JsonChat
-    {
-        public string Time { get; set; }
-        public string User { get; set; }
-        public string Message { get; set; }
-    }
     class DAO
     {
         public const string dbName = "chatlog";
@@ -24,7 +18,7 @@ namespace MyWinformApp_Server
 
         const string connectionString = "Server=localhost;Database=" + dbName + ";Uid=root;Pwd=qwe123!@#;";
 
-        public SqlConnection conn;
+        //public SqlConnection conn;
         private readonly MySqlConnection connection = new MySqlConnection(connectionString);
         MySqlCommand cmd;
 
@@ -35,18 +29,15 @@ namespace MyWinformApp_Server
 
         public int DataParser(string time, string user, string message)
         {
-            int err;
-
             if (connection != null)
             {
-                err = SetData("insert into " + tableName + "values(" + "3" + user + message + time + ");");
-                return err;
+                return SetData("insert into " + tableName + "values(" + "3" + user + message + time + ");"); // SQL 쿼리 오류
             }
             return -2; // connection loss;
         }
         public string JsonParser(string time, string user, string message)
         {
-            var serializedData = new JsonChat
+            var serializedData = new Main.JSON_Data
             {
                 Time = time,
                 User = user,
