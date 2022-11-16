@@ -22,6 +22,9 @@ namespace MyWinformApp_Server
         private int userCount = 0;
         private string date;
 
+        private string bigSerializedJSON_Chatlogs = "";
+        private string temporaryForked_Chatlogs;
+
         private readonly object threadLock = new object();
         private Queue<string> userToRemove = new Queue<string>();
 
@@ -44,7 +47,10 @@ namespace MyWinformApp_Server
             public string User { get; set; }
             public string Message { get; set; }
         }
-        
+        /*
+         *         채팅 들어올 때, JSON으로 저장 -> DB에 넣을 때 Flush
+         */
+
         private string JsonParser(string date, string user, string message)
         {
             var serializedData = new JSON_Data
@@ -94,6 +100,14 @@ namespace MyWinformApp_Server
                 IsBackground = true
             };
             httpThread.Start();
+
+            // Timer Thread
+            WorkClass wc = new WorkClass(temporaryForked_Chatlogs, new WorkClassCallBack(TimerISR));
+            Thread timer = new Thread(new ThreadStart(wc.ThreadProc))
+            {
+                IsBackground = true
+            };
+            timer.Start();
         }
 
         private void Main_Load(object sender, EventArgs e)
@@ -101,6 +115,14 @@ namespace MyWinformApp_Server
             userDAO = new DAO();
             userDAO.Open();
         }
+
+        #region TimerRegion
+        private void TimerISR(object parameter)
+        {
+            temporaryForked_Chatlogs = bigSerializedJSON_Chatlogs;
+            bigSerializedJSON_Chatlogs = "";
+        }
+        #endregion
 
         #region NetworkConnection
 
@@ -240,6 +262,7 @@ namespace MyWinformApp_Server
             {
                 date = DateTime.Now.ToString("MM월dd일 HH:mm:ss");
                 string DisplayMessage = "[" + date + "]" + user_name + " : " + message;
+                bigSerializedJSON_Chatlogs += JsonParser(date, user_name, message);
                 DisplayText(DisplayMessage);
                 SendMessageToAll(message, user_name, true);
             }
