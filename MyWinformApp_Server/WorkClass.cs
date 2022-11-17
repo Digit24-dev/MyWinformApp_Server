@@ -21,6 +21,7 @@ namespace MyWinformApp_Server
 
         public void ThreadProc()
         {
+            
             callBack?.Invoke(Dummy);
         }
     }
