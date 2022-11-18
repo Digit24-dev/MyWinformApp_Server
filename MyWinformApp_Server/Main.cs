@@ -262,6 +262,7 @@ namespace MyWinformApp_Server
             {
                 date = DateTime.Now.ToString("MM월dd일 HH:mm:ss");
                 string DisplayMessage = "[" + date + "]" + user_name + " : " + message;
+                // 분리 방법 : JSON 형태로 데이터를 분리 -> 분리한 데이터를 직렬화하여 String 타입으로 저장하다가 Timer마다 DB에 저장하고 Flush
                 bigSerializedJSON_Chatlogs += JsonParser(date, user_name, message);
                 DisplayText(DisplayMessage);
                 SendMessageToAll(message, user_name, true);
