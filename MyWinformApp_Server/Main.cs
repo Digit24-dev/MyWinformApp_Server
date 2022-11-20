@@ -102,6 +102,7 @@ namespace MyWinformApp_Server
             httpThread.Start();
 
             // Timer Thread
+            // 스레드에 파라미터를 전달하는 방법에 대한 연구 필요.
             WorkClass wc = new WorkClass(temporaryForked_Chatlogs, new WorkClassCallBack(TimerISR));
             Thread timer = new Thread(new ThreadStart(wc.ThreadProc))
             {
@@ -119,6 +120,7 @@ namespace MyWinformApp_Server
         #region TimerRegion
         private void TimerISR(object parameter)
         {
+            // 타이머가 동작하면 temporaryForked_Chatlogs를 넘겨야 함.
             temporaryForked_Chatlogs = bigSerializedJSON_Chatlogs;
             bigSerializedJSON_Chatlogs = "";
         }
