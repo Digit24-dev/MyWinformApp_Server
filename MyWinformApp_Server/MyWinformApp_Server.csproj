@@ -123,6 +123,7 @@
     <Compile Include="handleClient.cs" />
     <Compile Include="HttpConnect.cs" />
     <Compile Include="IDataBase_Connection.cs" />
+    <Compile Include="Interface1.cs" />
     <Compile Include="Main.cs">
       <SubType>Form</SubType>
     </Compile>
