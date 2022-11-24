@@ -12,8 +12,8 @@ namespace MyWinformApp_Server
 {
     class DAO
     {
-        public const string dbName = "chatlog";
-        public const string tableName = "logs";
+        public const string dbName = "chatlogs";
+        public const string tableName = "chatlog";
         //const string tableName = "chatlog";
 
         const string connectionString = "Server=localhost;Database=" + dbName + ";Uid=root;Pwd=qwe123!@#;";

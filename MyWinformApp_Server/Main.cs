@@ -92,23 +92,23 @@ namespace MyWinformApp_Server
             };
             thread_UIController.Start();
 
-            // HTTP Thread
+            /*// HTTP Thread
             httpConnect = new HttpConnect();
             //httpConnect.ServerInit();
             Thread httpThread = new Thread(httpConnect.ServerInit)
             {
                 IsBackground = true
             };
-            httpThread.Start();
+            httpThread.Start();*/
 
-            // Timer Thread
+            /*// Timer Thread
             // 스레드에 파라미터를 전달하는 방법에 대한 연구 필요.
             WorkClass wc = new WorkClass(temporaryForked_Chatlogs, new WorkClassCallBack(TimerISR));
             Thread timer = new Thread(new ThreadStart(wc.ThreadProc))
             {
                 IsBackground = true
             };
-            timer.Start();
+            timer.Start();*/
         }
 
         private void Main_Load(object sender, EventArgs e)
