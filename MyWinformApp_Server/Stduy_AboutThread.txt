@@ -278,7 +278,110 @@
 	  2. async로 한정한 Task 또는 Task<TResult>를 반환하는 메소드/태스크/람다식은 await 연산자를 만나는 곳에서 호출자에게 제어를 돌려주며, await 연산자가 없는 경우 동기로 실행된다.
 
 
-
 	  - await 연산자
 
+		예시
+		{
+			async void MyMethodAsyn()
+			{
+				문장2;
+				await Task.Run( async () =>
+					{
+						문장A;
+						문장B;
+					}
+				);
+				문장C;
+			}
 
+			void Caller()
+			{
+				문장1;
+				MyMethodAsync();
+				문장3;
+			}
+		
+			// 실행 순서
+			문장1 > MyMethodAsync 실행 > 문장2 > async 람다문을 피연산자로하는 await 연산자 > CLR은 제어를 Caller 에게 넘김 > 코드의 흐름이 Caller 와 Task 두 갈래로 나뉨.
+		}
+
+	19.3.1 .NET 프레임워크 비동기 API
+
+	  [ System.IO.Stream 클래스가 제공하는 비동기 메소드 ]
+
+	    - System.IO.ReadAsync
+		- System.IO.WriteAsync
+	  
+	  두 메서드로 비동기 코딩을 구현할 수 있다.
+
+
+	** Thread에 파라미터 전달
+
+	Thread 클래스는 파라미터를 전달하지 않는 ThreadStart 델리게이트와 파라미터를 직접 전달하는 ParameterizedThreadStart 델리게이트를 사용할 수 있다.
+	
+	- ThreadStart 델리게이트
+	
+	 public delegate void ThreadStart(); (주로 이렇게 선언하며 파라미터를 직접 전달받지 않는다. #하지만 이것도 예외가 있다.)
+
+	 예외
+	 {
+		// ThreadStart 에서 파라미터 전달
+		Thread t3 = new Thread(() => Sum(10,20,30));
+		t3.Start();
+	 }
+
+	 - ParameterizedThreadStart 델리게이트
+
+	 public delegate void ParameterizedThreadStart(object obj); 로 정의 object 파라미터를 전달하고 리턴 값이 없는 형식.
+	 하나의 파라미터를 object 형식으로 전달하기 때문에, 여러 개의 파라미터를 전달하기 위해서는 클래스나 구조체를 만들어 객체를 생성해서 전달할 수 있다.
+	 파라미터의 전달은 Thread.Start(); 메서드를 호출할 때 파라미터를 전달한다.
+	 ThreadStart를 이용해 파라미터를 전달하는 방법은 일단 델리게이트 메서드는 파라미터를 받아들이지 않으므로 그 메서드 안에서 다른 메서드를 호출하면서 파라미터를 전달하는 방식을 사용할 수 있다.
+
+	 예시
+	 {
+		Thread t2 = new Thread(new ParmeterizedThreadStart(Calc));
+		t2.Start(10.00);
+
+		static void Calc(object radius)
+		{
+			double r = (double)radius;
+			double area = r * r * 3.14;
+		}
+
+	 }
+
+		// Microsoft C# EX
+		using System;
+		using System.Threading;
+
+		public class Work
+		{
+			public static void Main()
+			{
+				// Start a thread that calls a parameterized static method.
+				Thread newThread = new Thread(Work.DoWork);
+				newThread.Start(42);
+
+				// Start a thread that calls a parameterized instance method.
+				Work w = new Work();
+				newThread = new Thread(w.DoMoreWork);
+				newThread.Start("The answer.");
+			}
+ 
+			public static void DoWork(object data)
+			{
+				Console.WriteLine("Static thread procedure. Data='{0}'",
+					data);
+			}
+
+			public void DoMoreWork(object data)
+			{
+				Console.WriteLine("Instance thread procedure. Data='{0}'",
+					data);
+			}
+		}
+		// This example displays output like the following:
+		//       Static thread procedure. Data='42'
+		//       Instance thread procedure. Data='The answer.'
+
+	 

@@ -92,14 +92,14 @@ namespace MyWinformApp_Server
             };
             thread_UIController.Start();
 
-            /*// HTTP Thread
+            // HTTP Thread
             httpConnect = new HttpConnect();
             //httpConnect.ServerInit();
             Thread httpThread = new Thread(httpConnect.ServerInit)
             {
                 IsBackground = true
             };
-            httpThread.Start();*/
+            httpThread.Start();
 
             /*// Timer Thread
             // 스레드에 파라미터를 전달하는 방법에 대한 연구 필요.
