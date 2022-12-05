@@ -44,7 +44,7 @@ namespace MyWinformApp_Server
             // 
             // Button_UpdateUserCount
             // 
-            this.Button_UpdateUserCount.Location = new System.Drawing.Point(346, 49);
+            this.Button_UpdateUserCount.Location = new System.Drawing.Point(543, 12);
             this.Button_UpdateUserCount.Name = "Button_UpdateUserCount";
             this.Button_UpdateUserCount.Size = new System.Drawing.Size(100, 23);
             this.Button_UpdateUserCount.TabIndex = 0;
@@ -67,7 +67,7 @@ namespace MyWinformApp_Server
             this.richTextBox1.Location = new System.Drawing.Point(12, 114);
             this.richTextBox1.Name = "richTextBox1";
             this.richTextBox1.ReadOnly = true;
-            this.richTextBox1.Size = new System.Drawing.Size(434, 324);
+            this.richTextBox1.Size = new System.Drawing.Size(631, 324);
             this.richTextBox1.TabIndex = 2;
             this.richTextBox1.Text = "";
             // 
@@ -75,7 +75,7 @@ namespace MyWinformApp_Server
             // 
             this.TextBox_Status.Location = new System.Drawing.Point(12, 21);
             this.TextBox_Status.Name = "TextBox_Status";
-            this.TextBox_Status.Size = new System.Drawing.Size(156, 21);
+            this.TextBox_Status.Size = new System.Drawing.Size(318, 21);
             this.TextBox_Status.TabIndex = 3;
             this.TextBox_Status.KeyUp += new System.Windows.Forms.KeyEventHandler(this.TextBox_Status_KeyUp);
             // 
@@ -92,7 +92,7 @@ namespace MyWinformApp_Server
             // 
             this.ListBox_Users.FormattingEnabled = true;
             this.ListBox_Users.ItemHeight = 12;
-            this.ListBox_Users.Location = new System.Drawing.Point(488, 45);
+            this.ListBox_Users.Location = new System.Drawing.Point(661, 41);
             this.ListBox_Users.Name = "ListBox_Users";
             this.ListBox_Users.Size = new System.Drawing.Size(111, 388);
             this.ListBox_Users.TabIndex = 6;
@@ -100,7 +100,7 @@ namespace MyWinformApp_Server
             // label2
             // 
             this.label2.AutoSize = true;
-            this.label2.Location = new System.Drawing.Point(486, 30);
+            this.label2.Location = new System.Drawing.Point(659, 26);
             this.label2.Name = "label2";
             this.label2.Size = new System.Drawing.Size(38, 12);
             this.label2.TabIndex = 7;
@@ -108,7 +108,7 @@ namespace MyWinformApp_Server
             // 
             // Button_Exit
             // 
-            this.Button_Exit.Location = new System.Drawing.Point(174, 19);
+            this.Button_Exit.Location = new System.Drawing.Point(255, 87);
             this.Button_Exit.Name = "Button_Exit";
             this.Button_Exit.Size = new System.Drawing.Size(75, 24);
             this.Button_Exit.TabIndex = 8;
@@ -118,7 +118,7 @@ namespace MyWinformApp_Server
             // 
             // textBox_UserCount
             // 
-            this.textBox_UserCount.Location = new System.Drawing.Point(346, 21);
+            this.textBox_UserCount.Location = new System.Drawing.Point(543, 41);
             this.textBox_UserCount.Name = "textBox_UserCount";
             this.textBox_UserCount.ReadOnly = true;
             this.textBox_UserCount.Size = new System.Drawing.Size(100, 21);
@@ -127,7 +127,7 @@ namespace MyWinformApp_Server
             // label
             // 
             this.label.AutoSize = true;
-            this.label.Location = new System.Drawing.Point(272, 25);
+            this.label.Location = new System.Drawing.Point(469, 45);
             this.label.Name = "label";
             this.label.Size = new System.Drawing.Size(68, 12);
             this.label.TabIndex = 10;
@@ -147,7 +147,7 @@ namespace MyWinformApp_Server
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 12F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(636, 450);
+            this.ClientSize = new System.Drawing.Size(784, 441);
             this.Controls.Add(this.button1);
             this.Controls.Add(this.label);
             this.Controls.Add(this.textBox_UserCount);

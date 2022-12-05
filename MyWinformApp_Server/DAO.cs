@@ -12,10 +12,10 @@ namespace MyWinformApp_Server
 {
     class DAO
     {
-        public const string dbName = "chatlogs";
-        public const string tableName = "chatlog";
-        //const string tableName = "chatlog";
-
+        public const string dbName = "chatlog";
+        public const string tableName = "logs";
+        //const string tableName = "chatlog"; 
+        
         const string connectionString = "Server=localhost;Database=" + dbName + ";Uid=root;Pwd=qwe123!@#;";
 
         //public SqlConnection conn;
@@ -34,7 +34,7 @@ namespace MyWinformApp_Server
                 return SetData("insert into " + tableName + "values(" + "3" + user + message + time + ");"); // SQL 쿼리 오류
             }
             return -2; // connection loss;
-        }
+        } 
         public string JsonParser(string time, string user, string message)
         {
             var serializedData = new Main.JSON_Data

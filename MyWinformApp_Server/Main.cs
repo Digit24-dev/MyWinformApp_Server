@@ -396,6 +396,8 @@ namespace MyWinformApp_Server
         private void Button1_Click(object sender, EventArgs e)
         {
             // JsonDeparser(); // test
+            Form1 form1 = new Form1();
+            form1.ShowDialog();
         }
     }
 }
