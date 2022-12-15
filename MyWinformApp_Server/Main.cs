@@ -122,6 +122,10 @@ namespace MyWinformApp_Server
         {
             // 타이머가 동작하면 temporaryForked_Chatlogs를 넘겨야 함.
             temporaryForked_Chatlogs = bigSerializedJSON_Chatlogs;
+            JSON_Data temp;
+            temp = JsonDeparser(temporaryForked_Chatlogs);
+
+            userDAO.SetData("insert into " + tableName + "values(" + temp.Time + temp.User+ temp.Message+ ")");
             bigSerializedJSON_Chatlogs = "";
         }
         #endregion
