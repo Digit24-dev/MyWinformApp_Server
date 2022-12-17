@@ -124,7 +124,7 @@ namespace MyWinformApp_Server
             temporaryForked_Chatlogs = bigSerializedJSON_Chatlogs;
             JSON_Data temp;
             temp = JsonDeparser(temporaryForked_Chatlogs);
-
+            // << JSON 데이터 분리하는 방법 고려
             userDAO.SetData("insert into " + tableName + "values(" + temp.Time + temp.User+ temp.Message+ ")");
             bigSerializedJSON_Chatlogs = "";
         }
