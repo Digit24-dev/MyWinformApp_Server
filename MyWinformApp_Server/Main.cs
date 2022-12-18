@@ -118,14 +118,25 @@ namespace MyWinformApp_Server
         }
 
         #region TimerRegion
+        // 타이머가 동작하면 temporaryForked_Chatlogs를 넘겨야 함.
         private void TimerISR(object parameter)
         {
-            // 타이머가 동작하면 temporaryForked_Chatlogs를 넘겨야 함.
+            //
             temporaryForked_Chatlogs = bigSerializedJSON_Chatlogs;
-            JSON_Data temp;
-            temp = JsonDeparser(temporaryForked_Chatlogs);
-            // << JSON 데이터 분리하는 방법 고려
-            userDAO.SetData("insert into " + tableName + "values(" + temp.Time + temp.User+ temp.Message+ ")");
+
+            // JSON은 XML 노드 트리 구조 + Hash 의 느낌이 든다. JSON 구조에 대해서 더 공부하고 DB에 저장하는 방법을 고려해보자.
+
+            JSON_Data temporaryDeSerJSON_Bucket;
+            
+            temporaryDeSerJSON_Bucket = JsonDeparser(temporaryForked_Chatlogs);
+            var indexJSON_Bucket = temporaryDeSerJSON_Bucket.Time;
+
+            
+            foreach (var item in indexJSON_Bucket)
+            {
+                userDAO.SetData("insert into " + tableName + "values(" + temporaryDeSerJSON_Bucket.Time + temporaryDeSerJSON_Bucket.User + temporaryDeSerJSON_Bucket.Message + ")");
+            }
+            
             bigSerializedJSON_Chatlogs = "";
         }
         #endregion
