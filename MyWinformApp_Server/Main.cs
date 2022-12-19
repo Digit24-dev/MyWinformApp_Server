@@ -92,14 +92,14 @@ namespace MyWinformApp_Server
             };
             thread_UIController.Start();
 
-            // HTTP Thread
+            /*// HTTP Thread
             httpConnect = new HttpConnect();
             //httpConnect.ServerInit();
             Thread httpThread = new Thread(httpConnect.ServerInit)
             {
                 IsBackground = true
             };
-            httpThread.Start();
+            httpThread.Start();*/
 
             /*// Timer Thread
             // 스레드에 파라미터를 전달하는 방법에 대한 연구 필요.
@@ -116,7 +116,7 @@ namespace MyWinformApp_Server
             userDAO = new DAO();
             userDAO.Open();
         }
-
+#if false
         #region TimerRegion
         // 타이머가 동작하면 temporaryForked_Chatlogs를 넘겨야 함.
         private void TimerISR(object parameter)
@@ -140,7 +140,7 @@ namespace MyWinformApp_Server
             bigSerializedJSON_Chatlogs = "";
         }
         #endregion
-
+#endif
         #region NetworkConnection
 
         /// <summary>
@@ -281,7 +281,8 @@ namespace MyWinformApp_Server
                 string DisplayMessage = "[" + date + "]" + user_name + " : " + message;
                 // 분리 방법 : JSON 형태로 데이터를 분리 -> 분리한 데이터를 직렬화하여 String 타입으로 저장하다가 Timer마다 DB에 저장하고 Flush
                 bigSerializedJSON_Chatlogs += JsonParser(date, user_name, message);
-                DisplayText(DisplayMessage);
+                //DisplayText(DisplayMessage);
+                DisplayText(bigSerializedJSON_Chatlogs);
                 SendMessageToAll(message, user_name, true);
             }
         }
