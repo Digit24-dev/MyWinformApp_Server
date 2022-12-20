@@ -48,6 +48,10 @@ namespace MyWinformApp_Server
             public string Time { get; set; }
             public string User { get; set; }
             public string Message { get; set; }
+            public override string ToString()
+            {
+                return base.ToString();
+            }
         }
         /*
          *         채팅 들어올 때, JSON으로 저장 -> DB에 넣을 때 Flush
@@ -61,12 +65,13 @@ namespace MyWinformApp_Server
                 User = user,
                 Message = message
             };
-            /*JsonSerializerOptions options = new JsonSerializerOptions
+            JsonSerializerOptions options = new JsonSerializerOptions
             {
                 Encoder = JavaScriptEncoder.Create(UnicodeRanges.BasicLatin, UnicodeRanges.Cyrillic),
-                WriteIndented = true;
-            };*/
-            return JsonSerializer.Serialize(serializedData);
+                WriteIndented = true
+            };
+            
+            return JsonSerializer.Serialize(serializedData, options);
 
             //displayText(jsonData); // 동작 완료.
         }
