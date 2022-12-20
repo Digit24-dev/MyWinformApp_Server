@@ -7,6 +7,8 @@ using System.Net;
 using System.Net.Sockets;
 using MySql.Data.MySqlClient;
 using System.Text.Json;
+using System.Text.Unicode;
+using System.Text.Encodings.Web;
 using System.Text.Json.Serialization;
 
 namespace MyWinformApp_Server
@@ -59,7 +61,11 @@ namespace MyWinformApp_Server
                 User = user,
                 Message = message
             };
-
+            /*JsonSerializerOptions options = new JsonSerializerOptions
+            {
+                Encoder = JavaScriptEncoder.Create(UnicodeRanges.BasicLatin, UnicodeRanges.Cyrillic),
+                WriteIndented = true;
+            };*/
             return JsonSerializer.Serialize(serializedData);
 
             //displayText(jsonData); // 동작 완료.
@@ -77,7 +83,9 @@ namespace MyWinformApp_Server
         public Main()
         {
             InitializeComponent();
-
+#if DEBUG
+            CheckForIllegalCrossThreadCalls = false;
+#endif
             // Scoket Thread
             Thread thread = new Thread(InitSocket)
             {
@@ -182,12 +190,12 @@ namespace MyWinformApp_Server
 
                     // Async UserList Update.
                     onReceiveFlag_Join = true;
-                    SendListOfUsers(user_name);
+                    SendListOfUsers();
 
-                    handleClient h_client = new handleClient();
-                    h_client.OnReceived += new handleClient.MessageDisplayHandler(OnReceived);
-                    h_client.OnDisconnected += new handleClient.DisconnectedHandler(OnDisconnected);
-                    h_client.startClient(clientSocket, clientList);
+                    HandleClient h_client = new HandleClient();
+                    h_client.OnReceived += new HandleClient.MessageDisplayHandler(OnReceived);
+                    h_client.OnDisconnected += new HandleClient.DisconnectedHandler(OnDisconnected);
+                    h_client.StartClient(clientSocket, clientList);
 
                 }
                 catch (SocketException es)
@@ -277,11 +285,12 @@ namespace MyWinformApp_Server
             }
             else
             {
-                date = DateTime.Now.ToString("MM월dd일 HH:mm:ss");
-                string DisplayMessage = "[" + date + "]" + user_name + " : " + message;
+                string date = DateTime.Now.ToString("MM월dd일 HH:mm:ss");
+                //string DisplayMessage = "[" + date + "]" + user_name + " : " + message;
+                //DisplayText(DisplayMessage);
+
                 // 분리 방법 : JSON 형태로 데이터를 분리 -> 분리한 데이터를 직렬화하여 String 타입으로 저장하다가 Timer마다 DB에 저장하고 Flush
                 bigSerializedJSON_Chatlogs += JsonParser(date, user_name, message);
-                //DisplayText(DisplayMessage);
                 DisplayText(bigSerializedJSON_Chatlogs);
                 SendMessageToAll(message, user_name, true);
             }
@@ -328,7 +337,7 @@ namespace MyWinformApp_Server
         /// 모든 유저에게 현재 접속 중인 유저 리스트를 문자열로 전송하는 메소드입니다. 문자열은 '$'로 구분되어 전송됩니다.
         /// </summary>
         /// <param name="user_name"></param>
-        private void SendListOfUsers(string user_name)
+        private void SendListOfUsers()
         {
             string userList = "";
 

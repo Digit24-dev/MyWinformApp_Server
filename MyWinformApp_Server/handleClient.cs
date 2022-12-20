@@ -10,18 +10,20 @@ using System.Diagnostics;
 
 namespace MyWinformApp_Server
 {
-    class handleClient
+    class HandleClient
     {
         TcpClient clientSocket = null;
         public Dictionary<TcpClient, string> clientList = null;
 
-        public void startClient(TcpClient clientSocket, Dictionary<TcpClient, string> clientList)
+        public void StartClient(TcpClient clientSocket, Dictionary<TcpClient, string> clientList)
         {
             this.clientSocket = clientSocket;
             this.clientList = clientList;
 
-            Thread t_hanlder = new Thread(doChat);
-            t_hanlder.IsBackground = true;
+            Thread t_hanlder = new Thread(DoChat)
+            {
+                IsBackground = true
+            };
             t_hanlder.Start();
         }
 
@@ -31,7 +33,7 @@ namespace MyWinformApp_Server
         public delegate void DisconnectedHandler(TcpClient clientSocket);
         public event DisconnectedHandler OnDisconnected;
 
-        private void doChat()
+        private void DoChat()
         {
             NetworkStream stream = null;
             try
@@ -49,8 +51,7 @@ namespace MyWinformApp_Server
                     msg = Encoding.Unicode.GetString(buffer, 0, bytes);
                     msg = msg.Substring(0, msg.IndexOf("$"));
 
-                    if (OnReceived != null)
-                        OnReceived(msg, clientList[clientSocket].ToString());
+                    OnReceived?.Invoke(msg, clientList[clientSocket].ToString());
                 }
             }
             catch (SocketException se)
@@ -59,8 +60,7 @@ namespace MyWinformApp_Server
 
                 if (clientSocket != null)
                 {
-                    if (OnDisconnected != null)
-                        OnDisconnected(clientSocket);
+                    OnDisconnected?.Invoke(clientSocket);
 
                     clientSocket.Close();
                     stream.Close();
@@ -72,8 +72,7 @@ namespace MyWinformApp_Server
 
                 if (clientSocket != null)
                 {
-                    if (OnDisconnected != null)
-                        OnDisconnected(clientSocket);
+                    OnDisconnected?.Invoke(clientSocket);
 
                     clientSocket.Close();
                     stream.Close();
