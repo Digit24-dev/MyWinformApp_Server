@@ -7,8 +7,6 @@ using System.Net;
 using System.Net.Sockets;
 using MySql.Data.MySqlClient;
 using System.Text.Json;
-using System.Text.Unicode;
-using System.Text.Encodings.Web;
 using System.Text.Json.Serialization;
 
 namespace MyWinformApp_Server
@@ -48,10 +46,6 @@ namespace MyWinformApp_Server
             public string Time { get; set; }
             public string User { get; set; }
             public string Message { get; set; }
-            public override string ToString()
-            {
-                return base.ToString();
-            }
         }
         /*
          *         채팅 들어올 때, JSON으로 저장 -> DB에 넣을 때 Flush
@@ -65,13 +59,8 @@ namespace MyWinformApp_Server
                 User = user,
                 Message = message
             };
-            JsonSerializerOptions options = new JsonSerializerOptions
-            {
-                Encoder = JavaScriptEncoder.Create(UnicodeRanges.BasicLatin, UnicodeRanges.Cyrillic),
-                WriteIndented = true
-            };
-            
-            return JsonSerializer.Serialize(serializedData, options);
+
+            return JsonSerializer.Serialize(serializedData);
 
             //displayText(jsonData); // 동작 완료.
         }
@@ -88,9 +77,7 @@ namespace MyWinformApp_Server
         public Main()
         {
             InitializeComponent();
-#if DEBUG
-            CheckForIllegalCrossThreadCalls = false;
-#endif
+
             // Scoket Thread
             Thread thread = new Thread(InitSocket)
             {
@@ -105,23 +92,23 @@ namespace MyWinformApp_Server
             };
             thread_UIController.Start();
 
-            // HTTP Thread
+/*            // HTTP Thread
             httpConnect = new HttpConnect();
             //httpConnect.ServerInit();
             Thread httpThread = new Thread(httpConnect.ServerInit)
             {
                 IsBackground = true
             };
-            httpThread.Start();
+            httpThread.Start();*/
 
-            // Timer Thread
+            /*// Timer Thread
             // 스레드에 파라미터를 전달하는 방법에 대한 연구 필요.
             WorkClass wc = new WorkClass(temporaryForked_Chatlogs, new WorkClassCallBack(TimerISR));
             Thread timer = new Thread(new ThreadStart(wc.ThreadProc))
             {
                 IsBackground = true
             };
-            timer.Start();
+            timer.Start();*/
         }
 
         private void Main_Load(object sender, EventArgs e)
@@ -129,12 +116,11 @@ namespace MyWinformApp_Server
             userDAO = new DAO();
             userDAO.Open();
         }
-#if false
+
         #region TimerRegion
         // 타이머가 동작하면 temporaryForked_Chatlogs를 넘겨야 함.
         private void TimerISR(object parameter)
         {
-            //
             temporaryForked_Chatlogs = bigSerializedJSON_Chatlogs;
 
             // JSON은 XML 노드 트리 구조 + Hash 의 느낌이 든다. JSON 구조에 대해서 더 공부하고 DB에 저장하는 방법을 고려해보자.
@@ -153,7 +139,7 @@ namespace MyWinformApp_Server
             bigSerializedJSON_Chatlogs = "";
         }
         #endregion
-#endif
+
         #region NetworkConnection
 
         /// <summary>
@@ -195,8 +181,8 @@ namespace MyWinformApp_Server
 
                     // Async UserList Update.
                     onReceiveFlag_Join = true;
-                    SendListOfUsers();
-
+                    SendListOfUsers(user_name);
+                    
                     HandleClient h_client = new HandleClient();
                     h_client.OnReceived += new HandleClient.MessageDisplayHandler(OnReceived);
                     h_client.OnDisconnected += new HandleClient.DisconnectedHandler(OnDisconnected);
@@ -290,13 +276,11 @@ namespace MyWinformApp_Server
             }
             else
             {
-                string date = DateTime.Now.ToString("MM월dd일 HH:mm:ss");
-                //string DisplayMessage = "[" + date + "]" + user_name + " : " + message;
-                //DisplayText(DisplayMessage);
-
+                date = DateTime.Now.ToString("MM월dd일 HH:mm:ss");
+                string DisplayMessage = "[" + date + "]" + user_name + " : " + message;
                 // 분리 방법 : JSON 형태로 데이터를 분리 -> 분리한 데이터를 직렬화하여 String 타입으로 저장하다가 Timer마다 DB에 저장하고 Flush
                 bigSerializedJSON_Chatlogs += JsonParser(date, user_name, message);
-                DisplayText(bigSerializedJSON_Chatlogs);
+                DisplayText(DisplayMessage);
                 SendMessageToAll(message, user_name, true);
             }
         }
@@ -342,7 +326,7 @@ namespace MyWinformApp_Server
         /// 모든 유저에게 현재 접속 중인 유저 리스트를 문자열로 전송하는 메소드입니다. 문자열은 '$'로 구분되어 전송됩니다.
         /// </summary>
         /// <param name="user_name"></param>
-        private void SendListOfUsers()
+        private void SendListOfUsers(string user_name)
         {
             string userList = "";
 
