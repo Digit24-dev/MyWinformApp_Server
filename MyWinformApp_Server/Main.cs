@@ -76,7 +76,14 @@ namespace MyWinformApp_Server
         {
             JSON_Data deSerializedData;
             
-            deSerializedData = JsonSerializer.Deserialize<JSON_Data>(jsonData);
+            // JSON Serializedr Option
+            JsonSerializerOptions options = new JsonSerializerOptions
+            {
+                Encoder = JavaScriptEncoder.Create(UnicodeRanges.BasicLatin, UnicodeRanges.Cyrillic),
+                WriteIndented = true
+            };
+
+            deSerializedData = JsonSerializer.Deserialize<JSON_Data>(jsonData, options);
 
             return deSerializedData;
         }
@@ -287,7 +294,8 @@ namespace MyWinformApp_Server
                 string DisplayMessage = "[" + date + "]" + user_name + " : " + message;
                 // 분리 방법 : JSON 형태로 데이터를 분리 -> 분리한 데이터를 직렬화하여 String 타입으로 저장하다가 Timer마다 DB에 저장하고 Flush
                 bigSerializedJSON_Chatlogs += JsonParser(date, user_name, message);
-                DisplayText(DisplayMessage);
+                //DisplayText(DisplayMessage);
+                DisplayText(bigSerializedJSON_Chatlogs);
                 SendMessageToAll(message, user_name, true);
             }
         }
