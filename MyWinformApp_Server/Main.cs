@@ -8,6 +8,8 @@ using System.Net.Sockets;
 using MySql.Data.MySqlClient;
 using System.Text.Json;
 using System.Text.Json.Serialization;
+using System.Text.Encodings.Web;
+using System.Text.Unicode;
 
 namespace MyWinformApp_Server
 {
@@ -59,8 +61,13 @@ namespace MyWinformApp_Server
                 User = user,
                 Message = message
             };
-
-            return JsonSerializer.Serialize(serializedData);
+            // Encoding Options Added. : 12-29
+            JsonSerializerOptions options = new JsonSerializerOptions
+            {
+                Encoder = JavaScriptEncoder.Create(UnicodeRanges.BasicLatin, UnicodeRanges.Cyrillic),
+                WriteIndented = true
+            };
+            return JsonSerializer.Serialize(serializedData, options);
 
             //displayText(jsonData); // 동작 완료.
         }
@@ -124,7 +131,7 @@ namespace MyWinformApp_Server
             temporaryForked_Chatlogs = bigSerializedJSON_Chatlogs;
 
             // JSON은 XML 노드 트리 구조 + Hash 의 느낌이 든다. JSON 구조에 대해서 더 공부하고 DB에 저장하는 방법을 고려해보자.
-
+            // JSON 으로 변환하는 과정에서 한글 인코딩이 ASCII로 인코딩 된다. JSON Parsing 하는 과정에서 인코딩하는 방식을 고려한 설계가 요구된다.
             JSON_Data temporaryDeSerJSON_Bucket;
             
             temporaryDeSerJSON_Bucket = JsonDeparser(temporaryForked_Chatlogs);
